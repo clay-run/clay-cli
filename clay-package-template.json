@@ -1,0 +1,9 @@
+{
+  "name": "Clay",
+  "description": "Allow any one to run cloud commands",
+  "authors": "Kareem Amin and Nicolae Rusan",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+  }
+}
