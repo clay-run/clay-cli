@@ -32,15 +32,51 @@ function newCommand(projectName) {
     // create a json file with name of command and name of project
     // make directory
   var dirPath = path.resolve(process.cwd(), `${projectName}`);
-  console.log(`Creating Directory: ${dirPath}`);
+  console.log(`Creating Project: ${dirPath}`);
   if(!fs.existsSync(dirPath)) fs.mkdirSync(dirPath)
   // make the correct files
   var clayDir =  path.resolve(__dirname);
   var packageTemplate = path.resolve(clayDir,'clay-package-template.json');
   var commandFile = path.resolve(clayDir,'clay-template.js');
+  var clayConfigJson = {
+    accountName: `apollo`,
+    commandName: `${projectName}`,
+    commandDescription: 'Enter your description here',
+    inputs: [
+      {
+        "name": "customers",
+          "type": "db",
+          "displayName": "customers",
+          "autocomplete": "customers"
+      },
+      {"name": "insurances",
+        "type": "db",
+        "displayName": "insurances",
+        "autocomplete": "insurances"
+      }
+    ]
+  };
+  var clayConfigPath = path.resolve(dirPath, '.clay-config.json');
+  fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson));
   // Copy files that come with the package as the template could also get them from the web
-  copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {console.log(err)});
-  copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {console.log(err)});
+  copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {});
+  copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {});
+  var requestOptions = {
+    uri: 'http://localhost:4500/api/v1/project/',
+    method: 'post',
+    body: {
+      account_name: `${projectName}`,
+      primary_email: `test@gmail.com`
+    },
+    json: true
+  }
+  rp(requestOptions)
+  .then((result) => {
+    console.log(result)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 }
 
 function runCommand() {
@@ -79,8 +115,9 @@ function deployCommand() {
   var currentAccountName = currentProjectConfig.accountName;
   var currentProjectDesc = currentProjectConfig.commandDescription;
   var currentProjectName = currentProjectConfig.commandName;
+  var currentProjectInputs = currentProjectConfig.inputs
   console.log(currentProjectConfig);
-  var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command/${currentProjectName}`
+  var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command/`
   var macCommand = 'zip -r  - node_modules *.* | base64';
 
   var execOptions = {
@@ -97,6 +134,8 @@ function deployCommand() {
       method: 'post',
       body: {
         commandDescription: currentProjectDesc,
+        commandName: `${currentProjectName}`,
+        function_input: currentProjectInputs,
         fileData: stdout
       },
       json: true
