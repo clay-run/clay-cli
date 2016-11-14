@@ -4,8 +4,10 @@
   "authors": "Kareem Amin and Nicolae Rusan",
   "version": "0.0.1",
   "private": false,
+  "preferGlobal": "true",
   "dependencies": {
     "aws-sdk": "2.6.12",
+    "fs-sync": "1.0.3",
     "lodash": "4.0.1",
     "pg": "6.1.0",
     "pg-promise": "5.3.4",
@@ -14,6 +16,9 @@
   },
   "devDependencies": {
     "chai": "3.5.0"
+  },
+  "bin": {
+    "clay": "clay-cli.js"
   },
   "scripts": {
     "start": "node clay-cli.js"

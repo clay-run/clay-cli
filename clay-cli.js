@@ -2,6 +2,7 @@
 
 var program = require('commander');
 var filePath = process.argv[1];
+var fsSync = require('fs-sync');
 var rp = require('request-promise-native');
 var exec = require('child_process').exec;
 var path = require('path');
@@ -23,11 +24,6 @@ program
   .command('deploy')
   .description('deploys command that is definied in the current directory')
   .action(deployCommand);
-
-program
-  .command('create')
-  .description('deploys command that is definied in the current directory')
-  .action(createCommand);
 
 program.parse(process.argv);
 
@@ -61,31 +57,12 @@ function newCommand(projectName) {
     ]
   };
   if(!fs.existsSync(dirPath)) fs.mkdirSync(dirPath)
-  fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson));
+  fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 4));
   fs.mkdirSync(path.resolve(dirPath, 'node_modules'));
   // Copy files that come with the package as the template could also get them from the web
-  var copyPackagePromise = new Promise((resolve, reject) => {
-    copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {
-      if(err) reject(err);
-      else resolve();
-    });
-  })
-  var copyProjectFilePromise = new Promise((resolve, reject) => {
-    copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {
-      if(err) reject(err);
-      else resolve();
-    });
-  })
-
-  copyPackagePromise
-  .then(() => {
-    return copyProjectFilePromise
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-
-
+  fsSync.copy(packageTemplate, path.resolve(dirPath, 'package.json'));
+  fsSync.copy(commandFile, path.resolve(dirPath, `${projectName}.js`));
+  setTimeout(() => deployCommand(dirPath, clayConfigJson, 'post'), 2000);
 
 }
 
@@ -96,31 +73,7 @@ function createCommand() {
 function runCommand() {
 }
 
-function copyFile(source, target, cb) {
-  var cbCalled = false;
-
-  var rd = fs.createReadStream(source);
-  rd.on("error", function(err) {
-      done(err);
-    });
-  var wr = fs.createWriteStream(target);
-  wr.on("error", function(err) {
-      done(err);
-    });
-  wr.on("close", function(ex) {
-      done();
-    });
-  rd.pipe(wr);
-
-  function done(err) {
-      if (!cbCalled) {
-            cb(err);
-            cbCalled = true;
-          }
-    }
-}
-
-function deployCommand(dir, clayConfig, mode) {
+function deployCommand(dir, clayConfig, mode, cb) {
   // output of this is a stream that should just directly get piped to request to be sent up
   // based on the command name and project name
   // project is based on the current id of the company
@@ -151,14 +104,14 @@ function deployCommand(dir, clayConfig, mode) {
       console.log(err);
       return
     }
-    console.log(stderr);
+    if (stderr) console.log(stderr);
     var options = {
       uri: 'http://localhost:4500/api/v1/company/apollo/command',
       method: mode,
       body: {
         commandDescription: currentProjectDesc,
         commandName: `${currentProjectName}`,
-        function_input: null,
+        function_input: JSON.stringify(currentProjectInputs),
         fileData: stdout
       },
       timeout: 0,
