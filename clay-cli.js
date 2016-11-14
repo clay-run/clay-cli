@@ -61,22 +61,7 @@ function newCommand(projectName) {
   // Copy files that come with the package as the template could also get them from the web
   copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {});
   copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {});
-  var requestOptions = {
-    uri: 'http://localhost:4500/api/v1/project/',
-    method: 'post',
-    body: {
-      account_name: `${projectName}`,
-      primary_email: `test@gmail.com`
-    },
-    json: true
-  }
-  rp(requestOptions)
-  .then((result) => {
-    console.log(result)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+  deployCommand(dirPath, clayConfigJson);
 }
 
 function runCommand() {
@@ -106,18 +91,19 @@ function copyFile(source, target, cb) {
     }
 }
 
-function deployCommand() {
+function deployCommand(dir, clayConfig) {
   // output of this is a stream that should just directly get piped to request to be sent up
   // based on the command name and project name
   // project is based on the current id of the company
   // var path = path.resolve(__dirname);
-  var currentProjectConfig = require(path.resolve(process.cwd(),  '/.clay-config.json'));
+  var deployDir = dir || process.cwd()
+  var currentProjectConfig = clayConfig || require(path.resolve(deployDir,  '/.clay-config.json'));
   var currentAccountName = currentProjectConfig.accountName;
   var currentProjectDesc = currentProjectConfig.commandDescription;
   var currentProjectName = currentProjectConfig.commandName;
   var currentProjectInputs = currentProjectConfig.inputs
   console.log(currentProjectConfig);
-  var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command/`
+  var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command`
   var macCommand = 'zip -r  - node_modules *.* | base64';
 
   var execOptions = {
@@ -135,11 +121,13 @@ function deployCommand() {
       body: {
         commandDescription: currentProjectDesc,
         commandName: `${currentProjectName}`,
-        function_input: currentProjectInputs,
+        function_input: null,
         fileData: stdout
       },
+      timeout: 60000,
       json: true
     }
+    console.log(options)
     rp(options)
     .then(function(result) {
       console.log(result);
