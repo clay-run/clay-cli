@@ -24,6 +24,11 @@ program
   .description('deploys command that is definied in the current directory')
   .action(deployCommand);
 
+program
+  .command('create')
+  .description('deploys command that is definied in the current directory')
+  .action(createCommand);
+
 program.parse(process.argv);
 
 
@@ -33,13 +38,12 @@ function newCommand(projectName) {
     // make directory
   var dirPath = path.resolve(process.cwd(), `${projectName}`);
   console.log(`Creating Project: ${dirPath}`);
-  if(!fs.existsSync(dirPath)) fs.mkdirSync(dirPath)
-  // make the correct files
   var clayDir =  path.resolve(__dirname);
   var packageTemplate = path.resolve(clayDir,'clay-package-template.json');
   var commandFile = path.resolve(clayDir,'clay-template.js');
+  var clayConfigPath = path.resolve(dirPath, '.clay-config.json');
   var clayConfigJson = {
-    accountName: `apollo`,
+    accountName: `public`,
     commandName: `${projectName}`,
     commandDescription: 'Enter your description here',
     inputs: [
@@ -56,12 +60,37 @@ function newCommand(projectName) {
       }
     ]
   };
-  var clayConfigPath = path.resolve(dirPath, '.clay-config.json');
+  if(!fs.existsSync(dirPath)) fs.mkdirSync(dirPath)
   fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson));
+  fs.mkdirSync(path.resolve(dirPath, 'node_modules'));
   // Copy files that come with the package as the template could also get them from the web
-  copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {});
-  copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {});
-  deployCommand(dirPath, clayConfigJson);
+  var copyPackagePromise = new Promise((resolve, reject) => {
+    copyFile(packageTemplate, path.resolve(dirPath, 'package.json'), (err) => {
+      if(err) reject(err);
+      else resolve();
+    });
+  })
+  var copyProjectFilePromise = new Promise((resolve, reject) => {
+    copyFile(commandFile, path.resolve(dirPath, `${projectName}.js`), (err) => {
+      if(err) reject(err);
+      else resolve();
+    });
+  })
+
+  copyPackagePromise
+  .then(() => {
+    return copyProjectFilePromise
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+
+
+
+}
+
+function createCommand() {
+  deployCommand('', null, 'post')
 }
 
 function runCommand() {
@@ -91,38 +120,48 @@ function copyFile(source, target, cb) {
     }
 }
 
-function deployCommand(dir, clayConfig) {
+function deployCommand(dir, clayConfig, mode) {
   // output of this is a stream that should just directly get piped to request to be sent up
   // based on the command name and project name
   // project is based on the current id of the company
   // var path = path.resolve(__dirname);
-  var deployDir = dir || process.cwd()
-  var currentProjectConfig = clayConfig || require(path.resolve(deployDir,  '/.clay-config.json'));
+  if(dir !== null && typeof dir === 'object') {
+    dir = process.cwd();
+  }
+  var deployDir = dir;
+  if(!mode) {
+    mode = 'put'
+  }
+  console.log(deployDir);
+
+  var currentProjectConfig = clayConfig || require(path.resolve(deployDir,  '.clay-config.json'));
   var currentAccountName = currentProjectConfig.accountName;
   var currentProjectDesc = currentProjectConfig.commandDescription;
   var currentProjectName = currentProjectConfig.commandName;
   var currentProjectInputs = currentProjectConfig.inputs
-  var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command`
   var macCommand = 'zip -r  - node_modules *.* | base64';
 
   var execOptions = {
-    maxBuffer: 1024 * 50000
+    maxBuffer: 1024 * 50000,
+    cwd: deployDir
   }
 
-  exec(macCommand, execOptions, (err, stdout, stedrr) => {
+  exec(macCommand, execOptions, (err, stdout, stderr) => {
     if (err) {
+      console.log(err);
       return
     }
+    console.log(stderr);
     var options = {
-      uri: deployCommandUrl,
-      method: 'post',
+      uri: 'http://localhost:4500/api/v1/company/apollo/command',
+      method: mode,
       body: {
         commandDescription: currentProjectDesc,
         commandName: `${currentProjectName}`,
         function_input: null,
         fileData: stdout
       },
-      timeout: 60000,
+      timeout: 0,
       json: true
     }
     rp(options)
@@ -132,8 +171,8 @@ function deployCommand(dir, clayConfig) {
     .catch(function(err) {
       console.log(err);
     })
-
   })
+
 
 
 }
