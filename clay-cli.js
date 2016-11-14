@@ -102,7 +102,6 @@ function deployCommand(dir, clayConfig) {
   var currentProjectDesc = currentProjectConfig.commandDescription;
   var currentProjectName = currentProjectConfig.commandName;
   var currentProjectInputs = currentProjectConfig.inputs
-  console.log(currentProjectConfig);
   var deployCommandUrl = `http://localhost:4500/api/v1/company/${currentAccountName}/command`
   var macCommand = 'zip -r  - node_modules *.* | base64';
 
@@ -112,7 +111,6 @@ function deployCommand(dir, clayConfig) {
 
   exec(macCommand, execOptions, (err, stdout, stedrr) => {
     if (err) {
-      console.log(err, stedrr);
       return
     }
     var options = {
@@ -127,11 +125,9 @@ function deployCommand(dir, clayConfig) {
       timeout: 60000,
       json: true
     }
-    console.log(options)
     rp(options)
     .then(function(result) {
       console.log(result);
-
     })
     .catch(function(err) {
       console.log(err);
