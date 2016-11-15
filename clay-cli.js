@@ -106,7 +106,7 @@ function deployCommand(dir, clayConfig, mode, cb) {
     }
     if (stderr) console.log(stderr);
     var options = {
-      uri: 'http://localhost:4500/api/v1/company/apollo/command',
+      uri: 'http://localhost:4500/api/v1/projects/public/methods',
       method: mode,
       body: {
         commandDescription: currentProjectDesc,
