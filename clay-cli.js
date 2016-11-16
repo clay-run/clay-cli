@@ -45,9 +45,8 @@ function newCommand(projectName) {
     inputs: [
       {
         "name": "customers",
-          "type": "db",
-          "displayName": "customers",
-          "autocomplete": "customers"
+        "type": "text",
+        "displayName": "customers",
       },
       {"name": "insurances",
         "type": "db",
@@ -57,7 +56,7 @@ function newCommand(projectName) {
     ]
   };
   if(!fs.existsSync(dirPath)) fs.mkdirSync(dirPath)
-  fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 4));
+  fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   fs.mkdirSync(path.resolve(dirPath, 'node_modules'));
   // Copy files that come with the package as the template could also get them from the web
   fsSync.copy(packageTemplate, path.resolve(dirPath, 'package.json'));
@@ -66,9 +65,6 @@ function newCommand(projectName) {
 
 }
 
-function createCommand() {
-  deployCommand('', null, 'post')
-}
 
 function runCommand() {
 }
@@ -122,7 +118,7 @@ function deployCommand(dir, clayConfig, mode, cb) {
       console.log(result);
     })
     .catch(function(err) {
-      console.log(err);
+      console.log("Unfortunately Clay hit a brick wall. Contact support@claylabshq.com");
     })
   })
 

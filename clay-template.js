@@ -4,7 +4,14 @@ exports.handler = function(event, context, callback) {
   // Use variables
   // context.body
   // Success return
-  context.succeed({"body": JSON.stringify(gamesOfWeek), "statusCode": 200, "headers": {"Content-Type": "application/json"}});
+  var eventVars = JSON.parse(event.body);
+  context.succeed({"body": JSON.stringify(eventVars),
+                  "statusCode": 200,
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                  }
+  });
 }
 
 
