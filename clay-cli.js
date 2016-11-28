@@ -72,7 +72,7 @@ if(!fs.existsSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'))){
   });
 } else {
   // Read the credentials and make it global for cli
-  const clayCredentials = require(path.resolve(clayCredentialsDir, 'clayCredentials.json'));
+  var clayCredentials = require(path.resolve(clayCredentialsDir, 'clayCredentials.json'));
 }
 
 
@@ -174,6 +174,7 @@ function deployCommand(dir, clayConfig, mode) {
         commandDescription: currentProjectDesc,
         commandName: `${currentProjectName}`,
         function_input: JSON.stringify(currentProjectInputs),
+        apiToken: clayCredentials.token,
         fileData: stdout,
         clayUser: clayCredentials
       },
