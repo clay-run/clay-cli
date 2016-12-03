@@ -34,7 +34,7 @@ Service.prototype.create = function(serviceName) {
   this.deployService = new DeployFactory({
     credentials: this.credentials,
     dir: this.dir,
-    mode: 'post',
+    mode: 'POST',
     clayConfig: this.clayConfigJson,
     api: this.api
   });

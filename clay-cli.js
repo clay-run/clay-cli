@@ -25,7 +25,7 @@ if(!(process.argv[2] == 'login' || process.argv[2] == 'signup')) {
 var deployService = new DeployFactory({
   credentials: clayCredentials,
   dir: process.cwd(),
-  mode: 'put',
+  mode: 'PUT',
   clayConfig: null,
   api: methodsApi
 });

@@ -43,13 +43,13 @@ Deployer.prototype.deploy = function() {
     }
 
     rp(options)
-    .then(function(response) {
+    .then((response) => {
       if(response.result == true && this.mode == 'POST') console.log(`Service Created.
                                                                       The URL is:${response.url} `)
       else if(response.result == true && this.mode =='PUT') console.log(`Service Updated.`)
       else console.log("Service did not update. Contact support@tryclay.com")
     })
-    .catch(function(err) {
+    .catch((err) => {
       console.log(err);
       console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
     })
