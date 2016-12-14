@@ -1,20 +1,24 @@
 #! /usr/bin/env node
 var   program           = require('commander')
  ,    path              = require('path')
- ,    getCredentials    = require('./get-credentials.js')
- ,    createCredentials = require('./create-credentials.js')
- ,    ServiceFactory    = require('./new-service.js')
- ,    authCredentials   = require('./authorize-credentials.js')
  ,    os                = require('os')
+ ,    chalk             = require('chalk')
+ ,    authCredentials   = require('./authorize-credentials.js')
+ ,    createCredentials = require('./create-credentials.js')
+ ,    getCredentials    = require('./get-credentials.js')
+ ,    getClayConfig     = require('./get-clay-config.js')
+ ,    showClayConfig    = require('./show-clay-config.js')
+ ,    ServiceFactory    = require('./new-service.js')
+ ,    LogsFactory       = require('./get-logs-service.js')
  ,    DeployFactory     = require('./deploy-service.js');
 
 var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://tryclay.com';
 
-const signupApi = `${clayApi}/api/v1/signup`;
+const signupApi = `${clayApi}/api/v1/auth/signup`;
+const authorizeApi = `${clayApi}/api/v1/auth/login`;
 const methodsApi = `${clayApi}/api/v1/projects/public/methods`;
-const authorizeApi = `${clayApi}/api/v1/login`;
+const logsApi = `${clayApi}/api/v1/projects/logs/1`;
 
-// read credentials if not available signup or login
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 
 // get credentials if not login or signup command
@@ -35,16 +39,32 @@ var newService = new ServiceFactory({
   api: methodsApi
 })
 
+var logsService = new LogsFactory({
+  credentials: clayCredentials,
+  api: logsApi,
+  clayConfig: getClayConfig()
+})
+
 program
 .version('0.0.1')
 .command('new <serviceName>')
-.description('new service')
+.description('creates a new service with the name <serviceName>')
 .action((projectName) => newService.create(projectName));
 
 program
 .command('deploy')
 .description('deploys service that is defined in the current directory')
 .action(() => deployService.deploy());
+
+program
+.command('info')
+.description('get a description of your service')
+.action(() => showClayConfig());
+
+program
+.command('logs')
+.description('get logs for your service')
+.action(() => logsService.log());
 
 program
 .command('signup')
@@ -56,16 +76,19 @@ program
 .description('login to clay')
 .action(() => authCredentials(authorizeApi, clayCredentialsDir));
 
+
 // program
 //   .command('run')
 //   .description('runs service that is defined in the current directory against test data')
 //   .action(runCommand);
+
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {
+  if(clayCredentials === null) console.log(chalk.white("You must sign up or login to use Clay. Type clay signup or clay login respectively."))
   program.outputHelp();
+  if(getClayConfig()) showClayConfig();
 }
-
 
 
 

@@ -1,6 +1,7 @@
 const rp       = require('request-promise-native')
   ,   path     = require('path')
   ,   fs       = require('fs')
+  ,   chalk   = require('chalk')
   ,   inquirer = require('inquirer');
 
 module.exports = function(signupApi, clayCredentialsDir) {
@@ -51,7 +52,7 @@ module.exports = function(signupApi, clayCredentialsDir) {
     })
     .then((signupResult) => {
       fs.writeFileSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
-      console.log("Wooo! You're now signed up. Try creating a new service using clay new")
+      console.log(chalk.white("Wooo! You're now signed up. Try creating a new service using clay new"))
     })
     .catch((err) => {
       console.log("Clay hit an error creating your login credentials");
