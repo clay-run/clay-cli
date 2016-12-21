@@ -24,9 +24,9 @@ Service.prototype.create = function(serviceName) {
     commandDescription: 'A service that takes in bits and moves atoms',
     inputs: [
       {
-        "name": "customers",
+        "name": "varNameInCode",
         "type": "text",
-        "displayName": "customers"
+        "displayName": "Human Readable Name of Variable"
       }
     ],
     methodDisplayName: `${serviceName}`
@@ -55,9 +55,9 @@ Service.prototype.create = function(serviceName) {
     });
     this.deployService.deploy()
     .then((deployResponse) => {
-      console.log(chalk.white('Your node service was created here:') + '\n' + chalk.red(`${deployResponse.url}`));
-      console.log(chalk.white('Your node service is available at this url:') + '\n' + chalk.red(`${this.dir}\n`));
-      console.log(chalk.white(`To change the name, description and inputs that your service expects update:`) + `\n` + chalk.red(`${this.dir}\\clayConfig.json\n`));
+      console.log(chalk.white('Your node service is available at this url:') + '\n' + chalk.red(`${deployResponse.url}\n`));
+      console.log(chalk.white('The code and configuration for the service is here:') + '\n' + chalk.red(`${this.dir}\n`));
+      console.log(chalk.white(`To change the name, description and inputs that your service expects update:`) + `\n` + chalk.red(`${this.dir}/clayConfig.json\n`));
       console.log(chalk.white(`To deploy run`) +  chalk.red(` clay deploy `) + chalk.white(`in the service directory\n`));
       console.log(chalk.white(`That's all there is to it!`));
     })
