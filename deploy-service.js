@@ -15,6 +15,7 @@ function Deployer (deployConfig) {
 Deployer.prototype.deploy = function() {
   return new Promise((resolve, reject) =>  {
 
+    if(this.mode=='PUT') console.log(chalk.white(`Updating Service...\n`))
     var currentProjectConfig = this.clayConfig || require(path.resolve(this.dir,  'clay-config.json'));
     var macCommand = 'zip -r  - node_modules *.* | base64';
 
