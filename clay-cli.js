@@ -10,6 +10,7 @@ var   program           = require('commander')
  ,    showClayConfig    = require('./show-clay-config.js')
  ,    ServiceFactory    = require('./new-service.js')
  ,    LogsFactory       = require('./get-logs-service.js')
+ ,    ListFactory       = require('./list-service.js')
  ,    DeployFactory     = require('./deploy-service.js');
 
 var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://tryclay.com';
@@ -50,6 +51,11 @@ var logsService = new LogsFactory({
   clayConfig: getClayConfig()
 })
 
+var listService = new ListFactory({
+  credentials: clayCredentials,
+  api: methodsApi
+})
+
 program
 .version('0.1.0')
 .command('new <serviceName>')
@@ -72,6 +78,11 @@ program
 .action(() => logsService.log());
 
 program
+.command('list')
+.description('list services in your account')
+.action(() => listService.list());
+
+program
 .command('signup')
 .description('signup to clay')
 .action(() => createCredentials(signupApi, clayCredentialsDir));
@@ -81,10 +92,6 @@ program
 .description('login to clay')
 .action(() => authCredentials(authorizeApi, clayCredentialsDir));
 
-program
-.command('list')
-.description('list services in your account')
-.action(() => authCredentials(authorizeApi, clayCredentialsDir));
 
 program.parse(process.argv);
 

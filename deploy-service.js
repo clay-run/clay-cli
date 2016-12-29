@@ -1,6 +1,5 @@
 var path     = require('path')
  ,  exec     = require('child_process').exec
- ,  path     = require('path')
  ,  chalk    = require('chalk')
  ,  rp       = require('request-promise-native');
 
