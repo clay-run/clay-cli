@@ -21,9 +21,14 @@ const logsApi = `${clayApi}/api/v1/projects/logs/1`;
 
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 
+
 // get credentials if not login or signup command
 if(!(process.argv[2] == 'login' || process.argv[2] == 'signup')) {
   var clayCredentials = getCredentials(clayCredentialsDir);
+  if(!clayCredentials) {
+    console.log(chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively."))
+    process.exit();
+  }
 }
 
 var deployService = new DeployFactory({
@@ -46,7 +51,7 @@ var logsService = new LogsFactory({
 })
 
 program
-.version('0.0.1')
+.version('0.1.0')
 .command('new <serviceName>')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => newService.create(projectName));
@@ -76,19 +81,19 @@ program
 .description('login to clay')
 .action(() => authCredentials(authorizeApi, clayCredentialsDir));
 
-
-// program
-//   .command('run')
-//   .description('runs service that is defined in the current directory against test data')
-//   .action(runCommand);
+program
+.command('list')
+.description('list services in your account')
+.action(() => authCredentials(authorizeApi, clayCredentialsDir));
 
 program.parse(process.argv);
 
+
 if (!process.argv.slice(2).length) {
-  if(clayCredentials === null) console.log(chalk.white("You must sign up or login to use Clay. Type clay signup or clay login respectively."))
   program.outputHelp();
   if(getClayConfig()) showClayConfig();
 }
+
 
 
 

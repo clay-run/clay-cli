@@ -39,6 +39,11 @@ Service.prototype.create = function(serviceName) {
   var clayConfigPath = path.resolve(this.dir, 'clay-config.json');
 
   if(!fs.existsSync(this.dir)) fs.mkdirSync(this.dir)
+  else {
+    // if directory exists return with an error
+    console.log(chalk.white(`Looks like a directory already exists with the name of your service. Please delete this directory:`) +chalk.red(`\n\n${this.dir}`)+chalk.white(` \n\nand try again.`));
+    process.exit();
+  }
   fsSync.copy(packageTemplate, path.resolve(this.dir, 'package.json'));
   fsSync.copy(commandFile, path.resolve(this.dir, `${serviceName}.js`));
   fs.writeFileSync(clayConfigPath, JSON.stringify(this.clayConfigJson, null, 2));
@@ -62,8 +67,9 @@ Service.prototype.create = function(serviceName) {
       console.log(chalk.white(`That's all there is to it!`));
     })
     .catch((err) => {
-      console.log(err);
-      console.log("Service did not update. Contact support@tryclay.com")
+      if(err.statusCode == 409) console.log(chalk.white(`Couldn't create service: `)+chalk.red(`${serviceName}\n`)+chalk.white(`Service already exists in your account`))
+      else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
+      fsSync.remove(this.dir);
     })
   }, 2000);
 
