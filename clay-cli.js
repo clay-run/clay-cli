@@ -3,6 +3,7 @@ var   program           = require('commander')
  ,    path              = require('path')
  ,    os                = require('os')
  ,    chalk             = require('chalk')
+ ,    fs                = require('fs')
  ,    authCredentials   = require('./authorize-credentials.js')
  ,    createCredentials = require('./create-credentials.js')
  ,    getCredentials    = require('./get-credentials.js')
@@ -19,8 +20,10 @@ const signupApi = `${clayApi}/api/v1/auth/signup`;
 const authorizeApi = `${clayApi}/api/v1/auth/login`;
 const methodsApi = `${clayApi}/api/v1/projects/public/methods`;
 const logsApi = `${clayApi}/api/v1/projects/logs/1`;
+const servicePage = `${clayApi}/services`;
 
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
+if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 
 // get credentials if not login or signup command
@@ -42,19 +45,20 @@ var deployService = new DeployFactory({
 
 var newService = new ServiceFactory({
   credentials: clayCredentials,
-  api: methodsApi
-})
+  api: methodsApi,
+  servicePage: servicePage
+});
 
 var logsService = new LogsFactory({
   credentials: clayCredentials,
   api: logsApi,
   clayConfig: getClayConfig()
-})
+});
 
 var listService = new ListFactory({
   credentials: clayCredentials,
   api: methodsApi
-})
+});
 
 program
 .version('0.1.0')

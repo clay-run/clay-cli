@@ -7,7 +7,8 @@ var   path          = require('path')
 
 function Service(serviceConfig) {
   this.credentials = serviceConfig.credentials;
-  this.api = serviceConfig.api
+  this.api = serviceConfig.api;
+  this.servicePage = serviceConfig.servicePage;
 }
 
 Service.prototype.create = function(serviceName) {
@@ -63,6 +64,7 @@ Service.prototype.create = function(serviceName) {
       console.log(chalk.white('Your node service is available at this url:') + '\n' + chalk.red(`${deployResponse.url}\n`));
       console.log(chalk.white('The code and configuration for the service is here:') + '\n' + chalk.red(`${this.dir}\n`));
       console.log(chalk.white(`To change the name, description and inputs that your service expects update:`) + `\n` + chalk.red(`${this.dir}/clayConfig.json\n`));
+      console.log(chalk.white(`You have a visual interface for it here:`) + `\n` + chalk.red(`${this.servicePage}/${deployResponse.user.username}/${serviceName}`));
       console.log(chalk.white(`To deploy run`) +  chalk.red(` clay deploy `) + chalk.white(`in the service directory\n`));
       console.log(chalk.white(`That's all there is to it!`));
     })
