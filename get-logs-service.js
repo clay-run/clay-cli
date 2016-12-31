@@ -1,4 +1,5 @@
-var rp       = require('request-promise-native');
+var rp     = require('request-promise-native')
+ ,  chalk  = require('chalk');
 
 function Logger (logConfig) {
   this.credentials = logConfig.credentials;
@@ -9,10 +10,9 @@ function Logger (logConfig) {
 Logger.prototype.log = function() {
 
   var options = {
-    uri: this.api,
+    uri: `${this.api}/${this.clayConfig.commandName}`,
     method: 'GET',
     qs: {
-      name: this.clayConfig.commandName,
       apiToken: this.credentials.token
     },
     timeout: 0,
@@ -26,8 +26,8 @@ Logger.prototype.log = function() {
     console.log(stringMessages);
   })
   .catch((err) => {
-    console.log(err);
-    console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
+    if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.commandName}\n`))
+    else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
   })
 }
 

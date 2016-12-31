@@ -18,8 +18,8 @@ var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://trycla
 
 const signupApi = `${clayApi}/api/v1/auth/signup`;
 const authorizeApi = `${clayApi}/api/v1/auth/login`;
-const methodsApi = `${clayApi}/api/v1/projects/public/methods`;
-const logsApi = `${clayApi}/api/v1/projects/logs/1`;
+const methodsApi = `${clayApi}/api/v1/services/public/methods`;
+const logsApi = `${clayApi}/api/v1/services/logs`;
 const servicePage = `${clayApi}/services`;
 
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
