@@ -9,17 +9,19 @@ module.exports = function(signupApi, clayCredentialsDir) {
     type: 'input',
     name: 'email',
     message: 'Enter your email address',
-    valid: function(email) {
-      if(email === '') 'please enter an email'
+    validate: function(email) {
+      if(email === '') return 'Please enter an email'
+        else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
         else return true
+      return true;
     }
   };
   var password = {
     type: 'password',
     name: 'password',
     message: 'Enter a password',
-    valid: function(password) {
-      if(password === '') 'please enter a password'
+    validate: function(password) {
+      if(password === '') return 'Please enter a password'
         else return true
     }
   };
@@ -27,9 +29,11 @@ module.exports = function(signupApi, clayCredentialsDir) {
     type: 'input',
     name: 'username',
     message: 'Enter a username',
-    valid: function(username) {
-      if(username === '') 'please enter a username'
+    validate: function(username) {
+      if(username === '') return 'Please enter a username'
+        else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
         else return true
+      return true
     }
   }
   // make a call to get a unique token that gets saved and used in future calls
@@ -40,9 +44,9 @@ module.exports = function(signupApi, clayCredentialsDir) {
       uri: signupApi,
       method: 'post',
       body: {
-        email: answers.email,
+        email: answers.email.toLowerCase(),
         password: answers.password,
-        username: answers.username
+        username: answers.username.toLowerCase()
       },
       timeout: 0,
       json: true
@@ -50,11 +54,15 @@ module.exports = function(signupApi, clayCredentialsDir) {
     return rp(requestOptions)
   })
   .then((signupResult) => {
-    fs.writeFileSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
-    console.log(chalk.white("Wooo! You're now signed up. Try creating a new service using clay new"))
+    if(signupResult) {
+      fs.writeFileSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
+      console.log(chalk.white("Wooo! You're now signed up. Try creating a new service using clay new"))
+    }
+    else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
   })
   .catch((err) => {
-    console.log("Clay hit an error creating your login credentials");
+    if(err.statusCode == 400) console.log("You must enter a value for email, password and username");
+    else console.log("The username or email address is already taken. Try logging in or using a different email address or username");
   })
 }
 
