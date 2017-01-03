@@ -10,6 +10,7 @@ var   program           = require('commander')
  ,    getClayConfig     = require('./get-clay-config.js')
  ,    showClayConfig    = require('./show-clay-config.js')
  ,    ServiceFactory    = require('./new-service.js')
+ ,    runFactory        = require('./run-service.js')
  ,    LogsFactory       = require('./get-logs-service.js')
  ,    ListFactory       = require('./list-service.js')
  ,    DeployFactory     = require('./deploy-service.js');
@@ -60,6 +61,10 @@ var listService = new ListFactory({
   api: methodsApi
 });
 
+var runService = new runFactory({
+  clayConfig: getClayConfig()
+});
+
 program
 .version('0.1.0')
 .command('new <serviceName>')
@@ -85,6 +90,11 @@ program
 .command('list')
 .description('list services in your account')
 .action(() => listService.list());
+
+program
+.command('run')
+.description('runs service locally')
+.action(() => runService.run());
 
 program
 .command('signup')

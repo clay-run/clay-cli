@@ -61,12 +61,13 @@ Service.prototype.create = function(serviceName) {
     });
     this.deployService.deploy()
     .then((deployResponse) => {
-      console.log(chalk.white(`Your node service is available here:`) + `\n` + chalk.red(`${this.servicePage}/${deployResponse.user.username}/${serviceName}\n`));
-      console.log(chalk.white(`Your can run your service by making an HTTP POST request to that url or using the visual interface for that url from your browser\n`));
+      console.log(chalk.white(`Your node service is now available.`))
+      console.log(chalk.white(`You can run your service by using the visual interface or by making an HTTP POST request to following url from your code:\n`));
+      console.log(chalk.red(`${this.servicePage}/${deployResponse.user.username}/${serviceName}\n`));
       console.log(chalk.white('The code and configuration for the service is here:') + '\n' + chalk.red(`${this.dir}\n`));
       console.log(chalk.white(`To change the name, description and inputs that your service expects update:`) + `\n` + chalk.red(`${this.dir}/clayConfig.json\n`));
       console.log(chalk.white(`To deploy run`) +  chalk.red(` clay deploy `) + chalk.white(`in the service directory\n`));
-      console.log(chalk.white(`That's all there is to it! For more information and help go to http://www.github.com/clay-run/clay-cli`));
+      console.log(chalk.white(`That's all there is to it!\nFor more information and help go to`)+chalk.red(` http://www.github.com/clay-run/clay-cli`));
     })
     .catch((err) => {
       if(err.statusCode == 409) console.log(chalk.white(`Couldn't create service: `)+chalk.red(`${serviceName}\n`)+chalk.white(`Service already exists in your account`))

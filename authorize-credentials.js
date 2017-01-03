@@ -8,8 +8,8 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
     type: 'input',
     name: 'email',
     message: 'Enter your email address',
-    valid: function(email) {
-      if(email === '') 'please enter an email'
+    validate: function(email) {
+      if(email === '') return 'please enter an email'
         else return true
     }
   };
@@ -17,8 +17,8 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
     type: 'password',
     name: 'password',
     message: 'Enter a password',
-    valid: function(password) {
-      if(password === '') 'please enter a password'
+    validate: function(password) {
+      if(password === '') return 'please enter a password'
         else return true
     }
   };
