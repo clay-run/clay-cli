@@ -13,6 +13,10 @@ function Service(serviceConfig) {
 
 Service.prototype.create = function(serviceName) {
 
+  if(!serviceName) {
+    console.log(chalk.white("You need a name for your service. Use:\n\n")+chalk.red("clay new <serviceName>\n")+chalk.white("\nReplace serviceName with the name of your service and do not include the angle brackets."))
+    return
+  }
   if(/^[!#$&-;=?-[]_a-z~]+$/.test(serviceName)) {
     console.log("You must enter a valid name for the service")
     return

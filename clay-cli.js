@@ -26,7 +26,6 @@ const servicePage = `${clayApi}/services`;
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
-
 // get credentials if not login or signup command
 if(!(process.argv[2] == 'login' || process.argv[2] == 'signup')) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -66,8 +65,8 @@ var runService = new runFactory({
 });
 
 program
-.version('0.1.0')
-.command('new <serviceName>')
+.version('0.2.0')
+.command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => newService.create(projectName));
 
