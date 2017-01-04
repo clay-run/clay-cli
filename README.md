@@ -1,7 +1,7 @@
 We're in early days. Get involved or ask questions by
 opening up Github issues or chatting with us on [Gitter](https://gitter.im/clay-run/Lobby?source=github).
 
-**This is the command line tool for using Clay - The fastest way to create and deploy microservices. **
+**This is the command line tool for using Clay - The fastest way to create and deploy microservices.**
 
 You can learn more here: <https://www.clay.run>
 
