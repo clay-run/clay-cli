@@ -2,7 +2,7 @@
   "name": "clay-run",
   "description": "Allow anyone to create & run cloud commands",
   "authors": "Kareem Amin and Nicolae Rusan",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "preferGlobal": "true",
   "dependencies": {
