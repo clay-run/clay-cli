@@ -41,7 +41,6 @@ if(!authCommands.find((command) => command == process.argv[2])) {
 if(process.argv[2] && !globalCommands.find((command) => command == process.argv[2]) && getClayConfig() == null) {
     console.log(chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again"));
     process.exit();
-
 }
 
 var deployService = new DeployFactory({

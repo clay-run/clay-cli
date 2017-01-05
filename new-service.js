@@ -14,7 +14,7 @@ function Service(serviceConfig) {
 Service.prototype.create = function(serviceName) {
   const dir                          = path.resolve(process.cwd(), `${serviceName}`)
    ,    clayDir                      = path.resolve(__dirname)
-   ,    packageTemplate              = path.resolve(clayDir,'clay-package-template.json')
+   ,    packagePath                  = path.resolve(dir, 'package.json')
    ,    commandFile                  = path.resolve(clayDir,'clay-template.js')
    ,    clayConfigPath               = path.resolve(dir, 'clay-config.json')
    ,    testDataPath                 = path.resolve(dir, 'test-data.json')
@@ -51,6 +51,19 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
     "varNameInCode": "testValueOfVar"
   }
 
+  var packageJson = {
+      "name": `${clayConfigJson.commandName}`,
+      "description": `${clayConfigJson.commandDescription}`,
+      "authors": `${this.credentials.username}`,
+      "version": "0.0.1",
+      "private": true,
+      "dependencies": {
+        },
+      "scripts": {
+          "start": `node ${clayConfigJson.commandName}`
+        }
+  }
+
   // Error checking must have a valid name and no directory with that name in folder
   if(!serviceName) {
     print(NO_SERVICE_NAME_ERR_MSG)
@@ -74,10 +87,10 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   }
 
   // Copy files that come with the package as the template
-  fsSync.copy(packageTemplate, path.resolve(dir, 'package.json'));
   fsSync.copy(commandFile, path.resolve(dir, `${serviceName}.js`));
   fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   fs.writeFileSync(testDataPath, JSON.stringify(testDataJson, null, 2));
+  fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   fs.mkdirSync(path.resolve(dir, 'node_modules'));
 
   print(CREATING_SERVICE_MSG);
