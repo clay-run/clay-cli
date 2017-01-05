@@ -15,7 +15,7 @@ var   program           = require('commander')
  ,    ListFactory       = require('./list-service.js')
  ,    DeployFactory     = require('./deploy-service.js');
 
-var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://tryclay.com';
+var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
 
 const signupApi = `${clayApi}/api/v1/auth/signup`;
 const authorizeApi = `${clayApi}/api/v1/auth/login`;
@@ -27,12 +27,21 @@ var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
-if(!(process.argv[2] == 'login' || process.argv[2] == 'signup')) {
+var authCommands = ['login', 'signup'];
+var globalCommands = authCommands.concat(['new', 'list']);
+
+if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
   if(!clayCredentials) {
     console.log(chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively."))
     process.exit();
   }
+}
+
+if(process.argv[2] && !globalCommands.find((command) => command == process.argv[2]) && getClayConfig() == null) {
+    console.log(chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again"));
+    process.exit();
+
 }
 
 var deployService = new DeployFactory({
@@ -64,8 +73,9 @@ var runService = new runFactory({
   clayConfig: getClayConfig()
 });
 
+
 program
-.version('0.2.0')
+.version('0.2.1')
 .command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => newService.create(projectName));

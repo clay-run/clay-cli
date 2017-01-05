@@ -20,13 +20,11 @@ Lister.prototype.list = function() {
 
   rp(options)
   .then((response) => {
-    console.log(chalk.white("This is a list of all the services in your account"))
+    console.log(chalk.white("This is a list of all the services in your account\n"))
     response.forEach((service) => {
-      console.log("\n")
-      console.log(chalk.white(`Name: `) + `${service.name}`)
+      console.log(chalk.white(`Name: `) + `${service.name.split('-').slice(1).join('-')}`)
       console.log(chalk.white(`Description: `)+ `${service.description}`)
-      console.log(chalk.white(`Display Name: `)+`${service.method_display_name}`)
-      console.log("\n")
+      console.log(chalk.white(`Display Name: `)+`${service.method_display_name}\n`)
     })
   })
   .catch((err) => {
