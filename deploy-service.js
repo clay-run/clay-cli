@@ -51,6 +51,7 @@ Deployer.prototype.deploy = function() {
           resolve(response);
       })
       .catch((err) => {
+        console.log(chalk.white(`Service failed to update. Please contact support@clay.run`))
         reject(err);
       })
     })

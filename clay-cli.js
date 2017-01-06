@@ -74,7 +74,7 @@ var runService = new runFactory({
 
 
 program
-.version('0.2.1')
+.version('0.3.2')
 .command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => newService.create(projectName));
