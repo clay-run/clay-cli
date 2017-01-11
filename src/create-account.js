@@ -4,7 +4,7 @@ const rp       = require('request-promise-native')
   ,   chalk   = require('chalk')
   ,   inquirer = require('inquirer');
 
-module.exports = function(signupApi, clayCredentialsDir) {
+module.exports = function() {
   var email = {
     type: 'input',
     name: 'email',
@@ -41,7 +41,7 @@ module.exports = function(signupApi, clayCredentialsDir) {
   inquirer.prompt([email, password, username])
   .then(function (answers) {
     var requestOptions = {
-      uri: signupApi,
+      uri: this.apis.signupApi,
       method: 'post',
       body: {
         email: answers.email.toLowerCase(),
@@ -55,7 +55,7 @@ module.exports = function(signupApi, clayCredentialsDir) {
   })
   .then((signupResult) => {
     if(signupResult) {
-      fs.writeFileSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
+      fs.writeFileSync(path.resolve(this.credentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
       console.log(chalk.white("Wooo! You're now signed up. Try creating a new service using clay new"))
     }
     else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");

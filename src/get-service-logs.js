@@ -1,16 +1,10 @@
 var rp     = require('request-promise-native')
  ,  chalk  = require('chalk');
 
-function Logger (logConfig) {
-  this.credentials = logConfig.credentials;
-  this.api = logConfig.api;
-  this.clayConfig = logConfig.clayConfig;
-}
-
-Logger.prototype.log = function() {
+module.exports = function() {
 
   var options = {
-    uri: `${this.api}/${this.clayConfig.commandName}`,
+    uri: `${this.apis.logsApi}/${this.credentials.username}-${this.clayConfig.commandName}`,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token
@@ -30,8 +24,3 @@ Logger.prototype.log = function() {
     else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
   })
 }
-
-module.exports =  Logger;
-
-
-

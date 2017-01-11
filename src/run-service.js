@@ -1,11 +1,8 @@
 const path  = require('path')
   ,   chalk = require('chalk');
 
-function Runner(serviceConfig) {
-  this.clayConfig = serviceConfig.clayConfig
-}
 
-Runner.prototype.run = function() {
+module.exports = function() {
 
 const service = require(path.resolve(process.cwd(), `${this.clayConfig.commandName}.js`)).handler
  ,    data = require(path.resolve(process.cwd(), 'test-data.json'))
@@ -26,7 +23,5 @@ console.log(SERVICE_OUTPUT_MSG);
 service(event, context)
 
 }
-
-module.exports = Runner;
 
 

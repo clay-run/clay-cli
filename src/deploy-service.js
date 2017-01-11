@@ -1,30 +1,36 @@
-var path     = require('path')
- ,  exec     = require('child_process').exec
- ,  chalk    = require('chalk')
- ,  rp       = require('request-promise-native');
+var path                      = require('path')
+ ,  exec                      = require('child_process').exec
+ ,  chalk                     = require('chalk')
+ ,  rp                        = require('request-promise-native')
+ ,  print                     = console.log
+ ,  macCommand                = 'zip -r  - node_modules *.* | base64'
+ ,  UPDATING_SERVICE_MSG      = chalk.white(`Updating Service...\n`)
+ ,  SERVICE_UPDATED_MSG       = chalk.white(`Service Updated.`)
+ ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`);
 
 module.exports = function(deployConfig) {
   return new Promise((resolve, reject) =>  {
 
-    if(deployConfig.mode=='PUT') console.log(chalk.white(`Updating Service...\n`))
-    var currentProjectConfig = this.clayConfig || require(path.resolve(this.dir,  'clay-config.json'));
-    var macCommand = 'zip -r  - node_modules *.* | base64';
-
+    var dir = deployConfig.dir
+    var currentProjectConfig = require(path.resolve(dir,  'clay-config.json'));
     var execOptions = {
       maxBuffer: 1024 * 50000,
-      cwd: this.dir
-    }
+      cwd: dir
+    };
+
+    if(deployConfig.mode == 'PUT') print(UPDATING_SERVICE_MSG)
 
     exec(macCommand, execOptions, (err, stdout, stderr) => {
       if (err) {
-        console.log(err);
+        print(SERVICE_UPDATE_FAILED_MSG)
         return
       }
-      if (stderr) console.log(stderr);
 
-      var options = {
-        uri: this.api,
-        method: deployConfig.mode,
+      print(stderr)
+
+      var requestOptions = {
+        uri: this.apis.methodsApi,
+        method: deployConfig.mode ,
         body: {
           commandDescription: currentProjectConfig.commandDescription,
           methodDisplayName: currentProjectConfig.methodDisplayName,
@@ -37,14 +43,15 @@ module.exports = function(deployConfig) {
         json: true
       }
 
-      rp(options)
+      rp(requestOptions)
       .then((response) => {
-        if(response.result == true && deployConfig.mode =='PUT') console.log(chalk.white(`Service Updated.`))
-          // Here also print out the url of the service
+        if(response.result == true && deployConfig.mode  == 'PUT') {
+          print(SERVICE_UPDATED_MSG)
+        }
           resolve(response);
       })
       .catch((err) => {
-        console.log(chalk.white(`Service failed to update. Please contact support@clay.run`))
+        print(SERVICE_UPDATE_FAILED_MSG)
         reject(err);
       })
     })

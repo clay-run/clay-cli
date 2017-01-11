@@ -89,9 +89,10 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
 
   print(CREATING_SERVICE_MSG);
 
-  this.deployService.deploy({mode: 'POST'})
+  // Set the directory to act on as the new service directory
+  this.deploy({mode: 'POST', dir: dir})
   .then((deployResponse) => {
-    print(SERVICE_CREATED_MSG, this.servicePage, this.credentials.username, serviceName, dir, dir);
+    print(SERVICE_CREATED_MSG, this.apis.servicePage, this.credentials.username, serviceName, dir, dir);
   })
   .catch((err) => {
     if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)

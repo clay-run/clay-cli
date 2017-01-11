@@ -26,7 +26,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
   inquirer.prompt([email, password])
   .then(function (answers) {
     var requestOptions = {
-      uri: authorizeApi,
+      uri: this.apis.loginApi,
       method: 'post',
       body: {
         email: answers.email,
@@ -45,7 +45,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
         email: userCredentials.email,
         token: userCredentials.api_token
       }
-      fs.writeFileSync(path.resolve(clayCredentialsDir, 'clayCredentials.json'), JSON.stringify(credentials, null, 2));
+      fs.writeFileSync(path.resolve(this.credentialsDir, 'clayCredentials.json'), JSON.stringify(credentials, null, 2));
       console.log("Wooo! You're now logged in")
     }
     // should never occur

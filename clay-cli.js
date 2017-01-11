@@ -5,18 +5,9 @@ var   program           = require('commander')
  ,    chalk             = require('chalk')
  ,    fs                = require('fs')
  ,    Service           = require('./src/service.js')
- ,    authCredentials   = require('./authorize-credentials.js')
- ,    createCredentials = require('./create-credentials.js')
- ,    getCredentials    = require('./get-credentials.js')
- ,    getClayConfig     = require('./get-clay-config.js')
- ,    showClayConfig    = require('./show-clay-config.js')
- ,    ServiceFactory    = require('./new-service.js')
- ,    runFactory        = require('./run-service.js')
- ,    LogsFactory       = require('./get-logs-service.js')
- ,    ListFactory       = require('./list-service.js')
- ,    DeployFactory     = require('./deploy-service.js');
-
-var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
+ ,    Account           = require('./src/account.js')
+ ,    getCredentials    = require('./src/get-credentials.js')
+ ,    getClayConfig     = require('./src/get-clay-config.js');
 
 // Check node version and give an error message if it's too low
 try {
@@ -30,9 +21,11 @@ catch (e) {
   // TODO: Don't fail if process.version formatting changes in the future instead add some production logging
 }
 
+var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
+
 const apis = {
   signupApi:`${clayApi}/api/v1/auth/signup`,
-  authorizeApi: `${clayApi}/api/v1/auth/login`,
+  loginApi: `${clayApi}/api/v1/auth/login`,
   methodsApi: `${clayApi}/api/v1/services/public/methods`,
   logsApi: `${clayApi}/api/v1/services/logs`,
   servicePage: `${clayApi}/services`
@@ -58,99 +51,62 @@ if(process.argv[2] && !globalCommands.find((command) => command == process.argv[
     process.exit();
 }
 
-var deployService = new DeployFactory({
-  credentials: clayCredentials,
-  dir: process.cwd(),
-  mode: 'PUT',
-  clayConfig: null,
-  api: methodsApi
-});
-
-var newService = new ServiceFactory({
-  credentials: clayCredentials,
-  api: methodsApi,
-  servicePage: servicePage
-});
-
-var logsService = new LogsFactory({
-  credentials: clayCredentials,
-  api: logsApi,
-  clayConfig: getClayConfig()
-});
-
-var listService = new ListFactory({
-  credentials: clayCredentials,
-  api: methodsApi
-});
-
-var runService = new runFactory({
-  clayConfig: getClayConfig()
-});
-
 var service = new Service({
   credentials: clayCredentials,
-  dir: process.cwd(),
-  mode: 'PUT',
   clayConfig: getClayConfig(),
-  api: methodsApi
-  servicePage: servicePage
+  apis: apis
 })
 
+var account = new Account({
+  credentialsDir: clayCredentialsDir,
+  apis: apis
+})
 
 program
 .version('0.3.2')
 .command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
-.action((projectName) => newService.create(projectName));
+.action((projectName) => service.create(projectName));
 
 program
 .command('deploy')
 .description('deploys service that is defined in the current directory')
-.action(() => deployService.deploy());
+.action(() => service.deploy({mode: 'PUT', dir: process.cwd()}));
 
 program
 .command('info')
 .description('get a description of your service')
-.action(() => showClayConfig());
+.action(() => service.info());
 
 program
 .command('logs')
 .description('get logs for your service')
-.action(() => logsService.log());
+.action(() => service.logs());
 
 program
 .command('list')
 .description('list services in your account')
-.action(() => listService.list());
+.action(() => service.list());
 
 program
 .command('run')
 .description('runs service locally')
-.action(() => runService.run());
+.action(() => service.run());
 
 program
 .command('signup')
 .description('signup to clay')
-.action(() => createCredentials(signupApi, clayCredentialsDir));
+.action(() => account.signup());
 
 program
 .command('login')
 .description('login to clay')
-.action(() => authCredentials(authorizeApi, clayCredentialsDir));
-
+.action(() => account.login());
 
 program.parse(process.argv);
 
-
 if (!process.argv.slice(2).length) {
   program.outputHelp();
-  if(getClayConfig()) showClayConfig();
+  if(getClayConfig()) service.info();
 }
-
-
-
-
-
-
-
 
