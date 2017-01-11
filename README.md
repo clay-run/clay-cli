@@ -108,8 +108,9 @@ The config file looks like this:
 
 ```
 {
-  "commandName": "eau",
-  "commandDescription": "A service that takes in bits and moves atoms",
+  "accountName": "eau",
+  "serviceName": "eau",
+  "serviceDescription": "A service that takes in bits and moves atoms",
   "inputs": [
     {
       "name": "varNameInCode",
@@ -117,15 +118,17 @@ The config file looks like this:
       "displayName": "Human Readable Name of Variable"
     }
   ],
-  "methodDisplayName": "eau"
+  "serviceDisplayName": "eau"
 }
 ```
 
 This is used by Clay to automatically created a visual interface that you can use to run your service and test it. It will also facilitate many features that will help in developing microservices in the future.
 
-```commandName```: is a string that identifies your service. Do not change this.
+```accountName```: is a string that identifies the type of account. Do not change this.
 
-```commandDescription```: is a description of what your service does.
+```serviceName```: is a string that identifies your service. Do not change this.
+
+```serviceDescription```: is a description of what your service does.
 
 ```inputs```: is an array of JSON objects with a
 
@@ -133,7 +136,7 @@ This is used by Clay to automatically created a visual interface that you can us
   - ```type```: type of variable. Currently supported are ```text```, ```date```, ```image```, ```file```, ```json```
   - ```displayName```: this is the name that shows up in the Clay's UI to idenitfy this variable
   
-```methodDisplayName```: this is the name that shows up in Clay's UI to identify this service 
+```serviceDisplayName```: this is the name that shows up in Clay's UI to identify this service 
   
  
 
