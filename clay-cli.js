@@ -70,7 +70,7 @@ var account = new Account({
 })
 
 program
-.version('0.3.4')
+.version('0.3.5')
 .command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => service.create(projectName));
