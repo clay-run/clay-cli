@@ -1,18 +1,11 @@
 var   path          = require('path')
  ,    fsSync        = require('fs-sync')
  ,    chalk         = require('chalk')
- ,    DeployFactory = require('./deploy-service.js')
  ,    print         = console.log
  ,    fs            = require('fs');
 
-function Service(serviceConfig) {
-  this.credentials = serviceConfig.credentials;
-  this.api = serviceConfig.api;
-  this.servicePage = serviceConfig.servicePage;
-  this.dir =serviceConfig.dir;
-}
 
-Service.prototype.create = function(serviceName) {
+module.exports = function(serviceName) {
   const dir                          = path.resolve(process.cwd(), `${serviceName}`)
    ,    clayDir                      = path.resolve(__dirname)
    ,    packagePath                  = path.resolve(dir, 'package.json')
@@ -96,15 +89,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
 
   print(CREATING_SERVICE_MSG);
 
-  this.deployService = new DeployFactory({
-    credentials: this.credentials,
-    dir: dir,
-    mode: 'POST',
-    clayConfig: clayConfigJson,
-    api: this.api
-  });
-
-  this.deployService.deploy()
+  this.deployService.deploy({mode: 'POST'})
   .then((deployResponse) => {
     print(SERVICE_CREATED_MSG, this.servicePage, this.credentials.username, serviceName, dir, dir);
   })
@@ -115,5 +100,3 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   })
 
 }
-
-module.exports = Service;

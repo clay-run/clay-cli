@@ -4,6 +4,7 @@ var   program           = require('commander')
  ,    os                = require('os')
  ,    chalk             = require('chalk')
  ,    fs                = require('fs')
+ ,    Service           = require('./src/service.js')
  ,    authCredentials   = require('./authorize-credentials.js')
  ,    createCredentials = require('./create-credentials.js')
  ,    getCredentials    = require('./get-credentials.js')
@@ -17,18 +18,32 @@ var   program           = require('commander')
 
 var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
 
-const signupApi = `${clayApi}/api/v1/auth/signup`;
-const authorizeApi = `${clayApi}/api/v1/auth/login`;
-const methodsApi = `${clayApi}/api/v1/services/public/methods`;
-const logsApi = `${clayApi}/api/v1/services/logs`;
-const servicePage = `${clayApi}/services`;
+// Check node version and give an error message if it's too low
+try {
+  var nodeVersion = parseFloat(process.version.split('v')[1]); // remove the v in the string and parse the float
+  if (nodeVersion < 4) {
+    console.log(chalk.white("Your node version is out of date. Please install node version 4 or greater. For help on how to do that go to: https://github.com/clay-run/clay-cli#faq"));
+    process.exit();
+  }
+}
+catch (e) {
+  // TODO: Don't fail if process.version formatting changes in the future instead add some production logging
+}
+
+const apis = {
+  signupApi:`${clayApi}/api/v1/auth/signup`,
+  authorizeApi: `${clayApi}/api/v1/auth/login`,
+  methodsApi: `${clayApi}/api/v1/services/public/methods`,
+  logsApi: `${clayApi}/api/v1/services/logs`,
+  servicePage: `${clayApi}/services`
+}
 
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list']);
+var globalCommands = authCommands.concat(['new', 'list', '--version']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -71,6 +86,15 @@ var listService = new ListFactory({
 var runService = new runFactory({
   clayConfig: getClayConfig()
 });
+
+var service = new Service({
+  credentials: clayCredentials,
+  dir: process.cwd(),
+  mode: 'PUT',
+  clayConfig: getClayConfig(),
+  api: methodsApi
+  servicePage: servicePage
+})
 
 
 program
