@@ -1,6 +1,7 @@
 var   deployService = require('./deploy-service.js')
  ,    newService    = require('./new-service.js')
  ,    logService    = require('./get-service-logs.js')
+ ,    testService   = require('./test-service.js')
  ,    runService    = require('./run-service.js')
  ,    infoService   = require('./get-service-info.js');
 
@@ -15,6 +16,7 @@ Service.prototype.create = newService;
 Service.prototype.deploy = deployService;
 Service.prototype.logs   = logService;
 Service.prototype.info   = infoService;
+Service.prototype.test   = testService;
 Service.prototype.run    = runService;
 
 module.exports = Service;

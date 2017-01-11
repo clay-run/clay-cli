@@ -4,6 +4,7 @@ var   program           = require('commander')
  ,    os                = require('os')
  ,    chalk             = require('chalk')
  ,    fs                = require('fs')
+ ,    print             = console.log
  ,    Service           = require('./src/service.js')
  ,    Account           = require('./src/account.js')
  ,    getCredentials    = require('./src/get-credentials.js')
@@ -11,9 +12,9 @@ var   program           = require('commander')
 
 // Check node version and give an error message if it's too low
 try {
-  var nodeVersion = parseFloat(process.version.split('v')[1]); // remove the v in the string and parse the float
+  let nodeVersion = parseFloat(process.version.split('v')[1]); // remove the v in the string and parse the float
   if (nodeVersion < 4) {
-    console.log(chalk.white("Your node version is out of date. Please install node version 4 or greater. For help on how to do that go to: https://github.com/clay-run/clay-cli#faq"));
+    print(NODE_OLD_ERR);
     process.exit();
   }
 }
@@ -21,7 +22,33 @@ catch (e) {
   // TODO: Don't fail if process.version formatting changes in the future instead add some production logging
 }
 
-var clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
+
+let clayCredentialsDir = path.resolve(os.homedir(), '.clay');
+if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
+
+// get credentials if not login or signup command
+let authCommands = ['login', 'signup'];
+let globalCommands = authCommands.concat(['new', 'list', '--version']);
+
+if(!authCommands.find((command) => command == process.argv[2])) {
+  var clayCredentials = getCredentials(clayCredentialsDir);
+  if(!clayCredentials) {
+    print(NO_CREDENTIALS_ERR)
+    process.exit();
+  }
+}
+
+if(process.argv[2] && !globalCommands.find((command) => command == process.argv[2]) && getClayConfig() == null) {
+    print(NOT_CLAY_DIR_ERR);
+    process.exit();
+}
+
+const NODE_OLD_ERR       = chalk.white("Your node version is out of date. Please install node version 4 or greater. For help on how to do that go to: https://github.com/clay-run/clay-cli#faq")
+ ,    NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively.")
+ ,    NOT_CLAY_DIR_ERR   = chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again")
+ ,    CURR_USER_MSG      = chalk.white(`You are currently signed in as: `)+chalk.red(`${clayCredentials.username}`);
+
+const clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run';
 
 const apis = {
   signupApi:`${clayApi}/api/v1/auth/signup`,
@@ -31,33 +58,14 @@ const apis = {
   servicePage: `${clayApi}/services`
 }
 
-var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
-if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
-
-// get credentials if not login or signup command
-var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version']);
-
-if(!authCommands.find((command) => command == process.argv[2])) {
-  var clayCredentials = getCredentials(clayCredentialsDir);
-  if(!clayCredentials) {
-    console.log(chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively."))
-    process.exit();
-  }
-}
-
-if(process.argv[2] && !globalCommands.find((command) => command == process.argv[2]) && getClayConfig() == null) {
-    console.log(chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again"));
-    process.exit();
-}
-
-var service = new Service({
+let service = new Service({
   credentials: clayCredentials,
   clayConfig: getClayConfig(),
   apis: apis
 })
 
-var account = new Account({
+let account = new Account({
+  credentials: clayCredentials,
   credentialsDir: clayCredentialsDir,
   apis: apis
 })
@@ -80,17 +88,22 @@ program
 
 program
 .command('logs')
-.description('get logs for your service')
+.description('get production logs for your service')
 .action(() => service.logs());
 
 program
 .command('list')
 .description('list services in your account')
-.action(() => service.list());
+.action(() => account.list());
+
+program
+.command('test')
+.description('test your service by running it locally')
+.action(() => service.test());
 
 program
 .command('run')
-.description('runs service locally')
+.description('run your service in production')
 .action(() => service.run());
 
 program
@@ -106,6 +119,7 @@ program
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {
+  print(CURR_USER_MSG)
   program.outputHelp();
   if(getClayConfig()) service.info();
 }

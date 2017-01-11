@@ -1,13 +1,12 @@
 var   path          = require('path')
- ,    fsSync        = require('fs-sync')
  ,    chalk         = require('chalk')
  ,    print         = console.log
- ,    fs            = require('fs');
+ ,    fs            = require('fs-extra');
 
 
 module.exports = function(serviceName) {
   const dir                          = path.resolve(process.cwd(), `${serviceName}`)
-   ,    clayDir                      = path.resolve(__dirname)
+   ,    clayDir                      = path.resolve(__dirname, '..')
    ,    packagePath                  = path.resolve(dir, 'package.json')
    ,    commandFile                  = path.resolve(clayDir,'clay-template.js')
    ,    clayConfigPath               = path.resolve(dir, 'clay-config.json')
@@ -46,15 +45,15 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   }
 
   var packageJson = {
-      "name": `${clayConfigJson.commandName}`,
-      "description": `${clayConfigJson.commandDescription}`,
+      "name": `${clayConfigJson.serviceName}`,
+      "description": `${clayConfigJson.serviceDescription}`,
       "authors": `${this.credentials.username}`,
       "version": "0.0.1",
       "private": true,
       "dependencies": {
         },
       "scripts": {
-          "start": `node ${clayConfigJson.commandName}`
+          "start": `node ${clayConfigJson.serviceName}`
         }
   }
 
@@ -81,7 +80,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   }
 
   // Copy files that come with the package as the template
-  fsSync.copy(commandFile, path.resolve(dir, `${serviceName}.js`));
+  fs.copySync(commandFile, path.resolve(dir, `${serviceName}.js`));
   fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   fs.writeFileSync(testDataPath, JSON.stringify(testDataJson, null, 2));
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
@@ -97,7 +96,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   .catch((err) => {
     if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
     else if(err.statusCode == 500) print(SERVICE_NOT_CREATED)
-    fsSync.remove(dir);
+    fs.removeSync(dir);
   })
 
 }

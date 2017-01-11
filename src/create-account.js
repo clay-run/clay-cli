@@ -1,7 +1,7 @@
 const rp       = require('request-promise-native')
   ,   path     = require('path')
   ,   fs       = require('fs')
-  ,   chalk   = require('chalk')
+  ,   chalk    = require('chalk')
   ,   inquirer = require('inquirer');
 
 module.exports = function() {
@@ -25,6 +25,15 @@ module.exports = function() {
         else return true
     }
   };
+  var confirmPassword = {
+    type: 'password',
+    name: 'confirmPassword',
+    message: 'Confirm password',
+    validate: function(confirmPassword) {
+      if(password === '') return 'Please confirm password'
+        else return true
+    }
+  };
   var username = {
     type: 'input',
     name: 'username',
@@ -38,11 +47,16 @@ module.exports = function() {
   }
   // make a call to get a unique token that gets saved and used in future calls
 
-  inquirer.prompt([email, password, username])
-  .then(function (answers) {
+  inquirer.prompt([email, password, confirmPassword, username])
+  .then((answers) => {
+    if(answers.password !== answers.confirmPassword) {
+      console.log(chalk.white("The passwords you entered don't match. Please try signing up again."))
+      process.exit();
+    }
+
     var requestOptions = {
       uri: this.apis.signupApi,
-      method: 'post',
+      method: 'POST',
       body: {
         email: answers.email.toLowerCase(),
         password: answers.password,
@@ -61,6 +75,7 @@ module.exports = function() {
     else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
   })
   .catch((err) => {
+    console.log(err);
     if(err.statusCode == 400) console.log("You must enter a value for email, password and username");
     else console.log("The username or email address is already taken. Try logging in or using a different email address or username");
   })

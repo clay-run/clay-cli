@@ -1,27 +1,27 @@
-const path  = require('path')
-  ,   chalk = require('chalk');
-
+var path  = require('path')
+ ,  rp    = require('request-promise-native')
+ ,  chalk = require('chalk');
 
 module.exports = function() {
 
-const service = require(path.resolve(process.cwd(), `${this.clayConfig.commandName}.js`)).handler
- ,    data = require(path.resolve(process.cwd(), 'test-data.json'))
- ,    packageInfo = require(path.resolve(process.cwd(), 'package.json'))
- ,    SERVICE_OUTPUT_MSG = chalk.white("Runing service with data from:\n")+chalk.red("test-data.json \n\n")+chalk.white("Output from your local service:");
+  // either test-data.json or you pass parameters to it
+  var  data  = require(path.resolve(process.cwd(), 'test-data.json'))
+  var options = {
+    uri: `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`,
+    method: 'POST',
+    body: data,
+    timeout: 0,
+    json: true
+  }
 
-var event = {}
-var context = {
-  functionName: this.clayConfig.commandName,
-  functionDescription: this.clayConfig.commandDescription,
-  functionVersion: packageInfo.version,
-  succeed: (response => console.log(response.body))
+  console.log(chalk.white(`Making an HTTP POST request to:`)+chalk.red(`\n${options.uri}\n`))
+  console.log(chalk.white(`With the following passed in the body:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`))
+  rp(options)
+  .then((response) => {
+    console.log(chalk.white(`Response:\n`)+chalk.red(`${JSON.stringify(response, null, 2)}`));
+  })
+  .catch((err) => {
+    if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
+    else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
+  })
 }
-
-event.body = JSON.stringify(data);
-
-console.log(SERVICE_OUTPUT_MSG);
-service(event, context)
-
-}
-
-

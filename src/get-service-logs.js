@@ -4,7 +4,7 @@ var rp     = require('request-promise-native')
 module.exports = function() {
 
   var options = {
-    uri: `${this.apis.logsApi}/${this.credentials.username}-${this.clayConfig.commandName}`,
+    uri: `${this.apis.logsApi}/${this.credentials.username}-${this.clayConfig.serviceName}`,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token

@@ -24,7 +24,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
   };
 
   inquirer.prompt([email, password])
-  .then(function (answers) {
+  .then((answers) => {
     var requestOptions = {
       uri: this.apis.loginApi,
       method: 'post',

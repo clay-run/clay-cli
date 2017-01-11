@@ -1,15 +1,11 @@
 var chalk    = require('chalk')
  ,  rp       = require('request-promise-native');
 
-function Lister (config) {
-  this.credentials = config.credentials;
-  this.api = config.api;
-}
 
-Lister.prototype.list = function() {
+module.exports = function() {
 
   var options = {
-    uri: this.api,
+    uri: this.apis.methodsApi,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token
@@ -33,6 +29,5 @@ Lister.prototype.list = function() {
   })
 
 }
-module.exports =  Lister;
 
 
