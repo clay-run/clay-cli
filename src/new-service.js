@@ -29,8 +29,8 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
 
   var clayConfigJson  = {
     accountName: `public`,
-    commandName: `${serviceName}`,
-    commandDescription: 'A service that takes in bits and moves atoms',
+    serviceName: `${serviceName}`,
+    serviceDescription: 'A service that takes in bits and moves atoms',
     inputs: [
       {
         "name": "varNameInCode",
@@ -38,7 +38,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
         "displayName": "Human Readable Name of Variable"
       }
     ],
-    methodDisplayName: `${serviceName}`
+    serviceDisplayName: `${serviceName}`
   };
 
   var testDataJson = {

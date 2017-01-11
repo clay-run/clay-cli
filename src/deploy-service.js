@@ -32,9 +32,9 @@ module.exports = function(deployConfig) {
         uri: this.apis.methodsApi,
         method: deployConfig.mode ,
         body: {
-          commandDescription: currentProjectConfig.commandDescription,
-          methodDisplayName: currentProjectConfig.methodDisplayName,
-          commandName: currentProjectConfig.commandName,
+          commandDescription: currentProjectConfig.serviceDescription,
+          methodDisplayName: currentProjectConfig.serviceDisplayName,
+          commandName: currentProjectConfig.serviceName,
           function_input: JSON.stringify(currentProjectConfig.inputs),
           apiToken: this.credentials.token,
           fileData: stdout
