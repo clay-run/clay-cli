@@ -71,7 +71,7 @@ let account = new Account({
 })
 
 program
-.version('0.3.2')
+.version('0.3.3')
 .command('new [serviceName]')
 .description('creates a new service with the name <serviceName>')
 .action((projectName) => service.create(projectName));
