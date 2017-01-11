@@ -11,9 +11,10 @@ var path                      = require('path')
 module.exports = function(deployConfig) {
   return new Promise((resolve, reject) =>  {
 
-    const dir                  = deployConfig.dir
-    const currentProjectConfig = require(path.resolve(dir,  'clay-config.json'));
-    const USER_NOT_AUTHORIZED  = chalk.white(`Current user is not authorized to create or update services. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
+    const dir                     = deployConfig.dir
+    const currentProjectConfig    = require(path.resolve(dir,  'clay-config.json'));
+    const USER_NOT_AUTHORIZED_ERR = chalk.white(`Current user is not authorized to create or update services. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
+    const SERVICE_URL_MSG         = chalk.white(`Your service is available here: `)+chalk.red(`${this.apis.servicePage}/${this.credentials.username}/${currentProjectConfig.serviceName}`)
 
     var execOptions = {
       maxBuffer: 1024 * 50000,
@@ -49,11 +50,12 @@ module.exports = function(deployConfig) {
       .then((response) => {
         if(response.result == true && deployConfig.mode  == 'PUT') {
           print(SERVICE_UPDATED_MSG)
+          print(SERVICE_URL_MSG)
         }
           resolve(response);
       })
       .catch((err) => {
-        if(err.statusCode == 401) print(USER_NOT_AUTHORIZED)
+        if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
         else print(SERVICE_UPDATE_FAILED_MSG)
         reject(err);
       })

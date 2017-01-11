@@ -75,7 +75,6 @@ module.exports = function() {
     else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
   })
   .catch((err) => {
-    console.log(err);
     if(err.statusCode == 400) console.log("You must enter a value for email, password and username");
     else console.log("The username or email address is already taken. Try logging in or using a different email address or username");
   })

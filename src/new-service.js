@@ -12,19 +12,20 @@ module.exports = function(serviceName) {
    ,    clayConfigPath               = path.resolve(dir, 'clay-config.json')
    ,    testDataPath                 = path.resolve(dir, 'test-data.json')
    ,    NO_SERVICE_NAME_ERR_MSG      = chalk.white("You need a name for your service. Use:\n\n")+chalk.red("clay new <serviceName>\n")+chalk.white("\nReplace serviceName with the name of your service and do not include the angle brackets.")
-   ,    INVALID_SERVICE_NAME_ERR_MSG = chalk.white("You must enter a valid name for the service. Don't use spaces or special characters.")
+   ,    INVALID_SERVICE_NAME_ERR_MSG = chalk.white("You must enter a valid name for the service. Only use letters, numbers, dashes or an underscore.")
    ,    DIR_EXISTS_ERR_MSG           = chalk.white(`Looks like a directory already exists with the name of your service. Please delete this directory:`) +chalk.red(`\n\n${dir}`)+chalk.white(` \n\nand try again.`)
    ,    CREATING_SERVICE_MSG         = chalk.white('Creating your service, one moment:\n')
    ,    SERVICE_EXISTS_ERR_MSG       = chalk.white(`Couldn't create service: `)+chalk.red(`${serviceName}\n`)+chalk.white(`Service already exists in your account`)
    ,    SERVICE_NOT_CREATED          = chalk.white("Service was not created. Contact support@tryclay.com") + chalk.white(`\nCleaning up any files or directories that were created`)
    ,    SERVICE_CREATED_MSG          = `
-${chalk.white('Your node service is now available.')}
-${chalk.white('You can run your service by using the visual interface or by making an HTTP POST request to following url from your code:\n')}
+${chalk.white('Your node service is now live and deployed.\n')}
+${chalk.white('The next step is to edit the code and configuration for your service which is here:') + '\n' + chalk.red('%s\n')}
+${chalk.white('After you make changes test it locally using\n') +  chalk.red('clay test \n')}
+${chalk.white('Then you can deploy it to production using\n') +  chalk.red('clay deploy \n')}
+${chalk.white('You can run your service by using the visual interface or by making an HTTP POST request to following url from your code:')}
 ${chalk.red('%s/%s/%s\n')}
-${chalk.white('The code and configuration for the service is here:') + '\n' + chalk.red('%s\n')}
-${chalk.white('To change the name, description and inputs that your service expects update:') + '\n' + chalk.red('%s/clayConfig.json\n')}
-${chalk.white('To deploy run') +  chalk.red(' clay deploy ') + chalk.white('in the service directory\n')}
-${chalk.white("That's all there is to it!\nFor more information and help go to")+chalk.red(' http://www.github.com/clay-run/clay-cli')} `;
+${chalk.white('You can also run it on production using:\n') +  chalk.red('clay run \n')}
+${chalk.white("That's all there is to it! For more information and help go to")+chalk.red(' http://www.github.com/clay-run/clay-cli')} `;
 
   var clayConfigJson  = {
     accountName: `public`,
@@ -68,7 +69,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
     return
   }
 
-  if(!/^[!#$&-;=?-[\]_a-z~]+$/.test(serviceName)) {
+  if(!/^[-0-9_a-z~]+$/.test(serviceName)) {
     print(INVALID_SERVICE_NAME_ERR_MSG)
     return
   }
@@ -91,7 +92,7 @@ ${chalk.white("That's all there is to it!\nFor more information and help go to")
   // Set the directory to act on as the new service directory
   this.deploy({mode: 'POST', dir: dir})
   .then((deployResponse) => {
-    print(SERVICE_CREATED_MSG, this.apis.servicePage, this.credentials.username, serviceName, dir, dir);
+    print(SERVICE_CREATED_MSG, dir, this.apis.servicePage, this.credentials.username, serviceName);
   })
   .catch((err) => {
     if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
