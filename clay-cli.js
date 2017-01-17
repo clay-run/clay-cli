@@ -3,7 +3,7 @@ var   program           = require('commander')
  ,    path              = require('path')
  ,    os                = require('os')
  ,    chalk             = require('chalk')
- ,    fs                = require('fs')
+ ,    fs                = require('fs-extra')
  ,    print             = console.log
  ,    Service           = require('./src/service.js')
  ,    Account           = require('./src/account.js')
@@ -11,8 +11,7 @@ var   program           = require('commander')
  ,    getClayConfig     = require('./src/get-clay-config.js');
 
 
-const NODE_OLD_ERR       = chalk.white("Your node version is out of date. Please install node version 4 or greater. For help on how to do that go to: https://github.com/clay-run/clay-cli#faq")
- ,    NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively.")
+const NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively.")
  ,    NOT_CLAY_DIR_ERR   = chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again");
 
 const clayApi = (process.env.CLAY_DEV) ? 'http://localhost:4500' : 'https://clay.run'
@@ -59,8 +58,9 @@ var account = new Account({
 program
 .version('0.3.5')
 .command('new [serviceName]')
+.option('-t, --template <templateName>', 'Template for service')
 .description('creates a new service with the name <serviceName>')
-.action((projectName) => service.create(projectName));
+.action((cmd, options) => service.create(cmd, options));
 
 program
 .command('deploy')

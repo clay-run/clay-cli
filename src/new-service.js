@@ -1,14 +1,17 @@
-var   path          = require('path')
- ,    chalk         = require('chalk')
- ,    print         = console.log
- ,    fs            = require('fs-extra');
+var   path                 = require('path')
+ ,    chalk                = require('chalk')
+ ,    print                = console.log
+ ,    clayConfigFactory    = require('./clay-config-generator')
+ ,    exec                 = require('child_process').exec
+ ,    clayTestDataFactory  = require('./clay-test-data-generator')
+ ,    clayNodePckgFactory  = require('./clay-node-package-generator')
+ ,    fs                   = require('fs-extra');
 
 
-module.exports = function(serviceName) {
+module.exports = function(serviceName, templateName) {
   const dir                          = path.resolve(process.cwd(), `${serviceName}`)
    ,    clayDir                      = path.resolve(__dirname, '..')
    ,    packagePath                  = path.resolve(dir, 'package.json')
-   ,    commandFile                  = path.resolve(clayDir,'clay-template.js')
    ,    clayConfigPath               = path.resolve(dir, 'clay-config.json')
    ,    testDataPath                 = path.resolve(dir, 'test-data.json')
    ,    NO_SERVICE_NAME_ERR_MSG      = chalk.white("You need a name for your service. Use:\n\n")+chalk.red("clay new <serviceName>\n")+chalk.white("\nReplace serviceName with the name of your service and do not include the angle brackets.")
@@ -29,52 +32,23 @@ ${chalk.white('After you make changes test it locally using:\n') +  chalk.red('c
 ${chalk.white('DEPLOY YOUR SERVICE')}
 ${chalk.white('******************************************\n')}
 ${chalk.white('Then you can deploy it to production using:\n') +  chalk.red('clay deploy \n')}
-${chalk.white('RUN YOUR SERVICE:')}
+${chalk.white('RUN YOUR SERVICE (ONLY RESPONDS TO POST REQUESTS):')}
 ${chalk.white('******************************************\n')}
 ${chalk.white('You can run your service by using the visual interface or by making an HTTP POST request to following url from your code:')}
 ${chalk.red('%s\n')}
 ${chalk.white('You can also run it on production using:\n') +  chalk.red('clay run \n')}
 ${chalk.white("That's all there is to it! For more information and help go to")+chalk.red(' http://www.github.com/clay-run/clay-cli')} `;
 
-  var clayConfigJson  = {
-    accountName: `public`,
-    serviceName: `${serviceName}`,
-    serviceDescription: 'A service that takes in bits and moves atoms',
-    inputs: [
-      {
-        "name": "varNameInCode",
-        "type": "text",
-        "displayName": "Human Readable Name of Variable"
-      }
-    ],
-    serviceDisplayName: `${serviceName}`
-  };
+  var clayConfigJson;
+  var testDataJson;
+  var packageJson;
+  var commandFile;
 
-  var testDataJson = {
-    "varNameInCode": "testValueOfVar"
-  }
-
-  var packageJson = {
-      "name": `${clayConfigJson.serviceName}`,
-      "description": `${clayConfigJson.serviceDescription}`,
-      "authors": `${this.credentials.username}`,
-      "version": "0.0.1",
-      "private": true,
-      "dependencies": {
-        },
-      "scripts": {
-          "start": `node ${clayConfigJson.serviceName}`
-        }
-  }
 
   // Error checking must have a valid name and no directory with that name in folder
+
   if(!serviceName) {
     print(NO_SERVICE_NAME_ERR_MSG)
-    return
-  }
-
-  if(process.argv[4]) {
-    print(INVALID_SERVICE_NAME_ERR_MSG)
     return
   }
 
@@ -89,12 +63,31 @@ ${chalk.white("That's all there is to it! For more information and help go to")+
     return
   }
 
+  switch(templateName.template) {
+    case 'alexa':
+      clayConfigJson  = clayConfigFactory.alexaTemplate(serviceName);
+      testDataJson = clayTestDataFactory.alexaTemplate();
+      packageJson = clayNodePckgFactory.alexaTemplate(clayConfigJson, this.credentials.username);
+      commandFile = path.resolve(clayDir,'templates/clay-alexa-template.js')
+      break;
+    default:
+      clayConfigJson  = clayConfigFactory.defaultTemplate(serviceName);
+      testDataJson = clayTestDataFactory.defaultTemplate();
+      packageJson = clayNodePckgFactory.defaultTemplate(clayConfigJson, this.credentials.username);
+      commandFile = path.resolve(clayDir,'templates/clay-node-template.js')
+      break;
+  }
+
+
   // Copy files that come with the package as the template
   fs.copySync(commandFile, path.resolve(dir, `${serviceName}.js`));
   fs.writeFileSync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   fs.writeFileSync(testDataPath, JSON.stringify(testDataJson, null, 2));
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   fs.mkdirSync(path.resolve(dir, 'node_modules'));
+  exec('npm install', {cwd: dir}, (err) => {
+    if(err) print(SERVICE_NOT_CREATED)
+  })
 
   print(CREATING_SERVICE_MSG);
 

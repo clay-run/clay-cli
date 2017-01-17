@@ -1,6 +1,6 @@
 const rp       = require('request-promise-native')
   ,   path     = require('path')
-  ,   fs       = require('fs')
+  ,   fs       = require('fs-extra')
   ,   inquirer = require('inquirer');
 
 module.exports = function(authorizeApi, clayCredentialsDir) {

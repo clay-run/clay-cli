@@ -1,5 +1,5 @@
 const path     = require('path')
-  ,   fs       = require('fs');
+  ,   fs       = require('fs-extra');
 
 module.exports = function(clayCredentialsDir) {
   var clayCredentials = null;
