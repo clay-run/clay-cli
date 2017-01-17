@@ -87,20 +87,20 @@ ${chalk.white("That's all there is to it! For more information and help go to")+
   fs.mkdirSync(path.resolve(dir, 'node_modules'));
   exec('npm install', {cwd: dir}, (err) => {
     if(err) print(SERVICE_NOT_CREATED)
+      // Set the directory to act on as the new service directory
+      this.deploy({mode: 'POST', dir: dir})
+      .then((deployResponse) => {
+        var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
+        print(SERVICE_CREATED_MSG, urlForService, dir, urlForService);
+      })
+      .catch((err) => {
+        if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
+          else if(err.statusCode == 500) print(SERVICE_NOT_CREATED)
+            fs.removeSync(dir);
+      })
   })
 
   print(CREATING_SERVICE_MSG);
 
-  // Set the directory to act on as the new service directory
-  this.deploy({mode: 'POST', dir: dir})
-  .then((deployResponse) => {
-    var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
-    print(SERVICE_CREATED_MSG, urlForService, dir, urlForService);
-  })
-  .catch((err) => {
-    if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
-    else if(err.statusCode == 500) print(SERVICE_NOT_CREATED)
-    fs.removeSync(dir);
-  })
 
 }
