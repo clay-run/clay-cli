@@ -22,6 +22,10 @@ exports.handler = function(event, context, callback) {
   // Write your Skill handler code here. This is where you
   // specify how your skill should respond. Make sure to write
   // a handler for each of your Intent types.
+  console.log(event);
+
+  // Required check of the HTTP headers to confirm that the request
+  // is genuinely coming from an Alexa.
 
   var handlers = {
 
@@ -47,6 +51,14 @@ exports.handler = function(event, context, callback) {
       this.emit(':tell', "The best number is " + randomNumber);
     },
 
+    // Intent: Launch. This is how Awesome Bot responds when there
+    // aren't important. Important to have a Launch Intent to make sure
+    // your skill passes Publishing Certification proces.
+    'LaunchRequest': function(){
+      this.emit(':tell', "Hello. I'm Awesome Bot. You are awesome! Anytime you need a little boost just say Alexa ask awesome bot for an awesome saying!");
+    },
+    // Intent: Unhandled. The Unhandled intent is how Alexa responds when someone
+    // asks for something that we don't handle explicitly
     'Unhandled': function(){
       this.emit(':tell', "I'm not sure what you're asking for");
     }
