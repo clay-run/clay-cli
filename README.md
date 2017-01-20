@@ -19,9 +19,28 @@ Clay-Cli is a command line tool that allows you to quickly create microservices 
 
 We currently support nodejs and the code is hosted as an Amazon Lambda cloud function. This means that the microservices are auto-scaling and production ready.
 
+## Create an Alexa Skill
+
+Create a new account using
+
+```
+$ clay signup
+```
+
+Then
+
+```
+$ clay new my-alexa-skill -t alexa
+```
+
+For a complete walk through check out [this blog
+post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
+
 ## Install
 
-```npm install -g clay-run```
+```
+$npm install -g clay-run
+```
 
 ## Usage
 ### Signup
@@ -41,6 +60,12 @@ $ clay new <your-service-name>
 ```
 
 Replace <serviceName> with the name of your service. This will create a folder in your current directory with the name of your service. 
+
+if you want to build an Alexa Skill simply run the following
+
+```
+$ clay new <your-service-name> -t alexa
+```
 
 Next change to your service directory:
 
