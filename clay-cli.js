@@ -27,7 +27,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version', 'open']);
+var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -59,7 +59,7 @@ program
 .version('0.3.5')
 .command('new [serviceName]')
 .option('-t, --template <templateName>', 'Template for service')
-.description('creates a new service with the name <serviceName>')
+.description('creates a new service with the name <serviceName>. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
 .action((cmd, options) => service.create(cmd, options));
 
 program
@@ -88,9 +88,9 @@ program
 .action(() => service.test());
 
 program
-.command('run')
-.description('run your service in production')
-.action(() => service.run());
+.command('run [serviceName]')
+.description('run your service in production if run from within your service directory. Optionally you can run any Clay service. Pass the full name of the service which looks like this username/servicename')
+.action((serviceName) => service.run(serviceName));
 
 program
 .command('open [serviceName]')

@@ -2,12 +2,27 @@ var path  = require('path')
  ,  rp    = require('request-promise-native')
  ,  chalk = require('chalk');
 
-module.exports = function() {
+module.exports = function(serviceName) {
 
   // either test-data.json or you pass parameters to it
-  var  data  = require(path.resolve(process.cwd(), 'test-data.json'))
+  var urlForService;
+  var data;
+
+  if(serviceName != null) {
+    urlForService = `${this.apis.servicePage}/${serviceName}`
+    data = {
+      varNameInCode: 'test'
+    };
+  } else if (this.clayConfig != null && this.clayConfig.serviceName != null) {
+    urlForService = `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`
+    data  = require(path.resolve(process.cwd(), 'test-data.json'))
+  } else {
+    console.log("Please enter a name of a service to run or execute this command from within a Clay service directory")
+    return;
+  }
+
   var options = {
-    uri: `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`,
+    uri: urlForService,
     method: 'POST',
     body: data,
     timeout: 0,
