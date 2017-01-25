@@ -10,6 +10,9 @@
     "commander": "2.9.0",
     "fs-extra": "1.0.0",
     "inquirer": "1.2.3",
+    "keen-js": "3.4.1",
+    "keen-tracking": "1.0.3",
+    "open": "0.0.5",
     "request": "2.76.0",
     "request-promise-native": "1.0.3"
   },

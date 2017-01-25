@@ -27,7 +27,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version']);
+var globalCommands = authCommands.concat(['new', 'list', '--version', 'open']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -91,6 +91,11 @@ program
 .command('run')
 .description('run your service in production')
 .action(() => service.run());
+
+program
+.command('open [serviceName]')
+.description('open service config page in web browser')
+.action((serviceName) => service.open(serviceName));
 
 program
 .command('signup')

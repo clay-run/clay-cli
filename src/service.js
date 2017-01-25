@@ -3,6 +3,7 @@ var   deployService = require('./deploy-service.js')
  ,    logService    = require('./get-service-logs.js')
  ,    testService   = require('./test-service.js')
  ,    runService    = require('./run-service.js')
+ ,    openService   = require('./open-service.js')
  ,    infoService   = require('./get-service-info.js');
 
 function Service(serviceConfig) {
@@ -21,5 +22,6 @@ Service.prototype.logs   = logService;
 Service.prototype.info   = infoService;
 Service.prototype.test   = testService;
 Service.prototype.run    = runService;
+Service.prototype.open   = openService;
 
 module.exports = Service;
