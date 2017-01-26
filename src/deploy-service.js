@@ -29,8 +29,6 @@ module.exports = function(deployConfig) {
         return
       }
 
-      print(stderr)
-
       var requestOptions = {
         uri: this.apis.methodsApi,
         method: deployConfig.mode ,

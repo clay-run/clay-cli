@@ -19,6 +19,7 @@ module.exports = function(serviceName, templateName) {
    ,    DIR_EXISTS_ERR_MSG           = chalk.white(`Looks like a directory already exists with the name of your service. Please delete this directory:`) +chalk.red(`\n\n${dir}`)+chalk.white(` \n\nand try again.`)
    ,    CREATING_SERVICE_MSG         = chalk.white('Creating your service, one moment:\n')
    ,    SERVICE_EXISTS_ERR_MSG       = chalk.white(`Couldn't create service: `)+chalk.red(`${serviceName}\n`)+chalk.white(`Service already exists in your account`)
+   ,    DOCS_LINK                    = 'https://www.clay.run/docs'
    ,    SERVICE_NOT_CREATED          = chalk.white("Service was not created. Contact support@tryclay.com") + chalk.white(`\nCleaning up any files or directories that were created`)
 
   var clayConfigJson;
@@ -76,7 +77,7 @@ module.exports = function(serviceName, templateName) {
       this.deploy({mode: 'POST', dir: dir})
       .then((deployResponse) => {
         var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
-        print(templateMessages.serviceCreated, urlForService, dir, urlForService);
+        print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
       })
       .catch((err) => {
         if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
