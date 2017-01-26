@@ -23,7 +23,7 @@ module.exports = function(deployConfig) {
 
     if(deployConfig.mode == 'PUT') print(UPDATING_SERVICE_MSG)
 
-    exec(macCommand, execOptions, (err, stdout, stderr) => {
+    exec(macCommand, execOptions, (err, stdout) => {
       if (err) {
         print(SERVICE_UPDATE_FAILED_MSG)
         return
