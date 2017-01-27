@@ -16,7 +16,7 @@ module.exports = function() {
   rp(options)
   .then((response) => {
     var messages = response.map((logs) => logs.message);
-    var stringMessages = messages.join('\n')
+    var stringMessages = messages.reverse().join('\n')
     console.log(stringMessages);
   })
   .catch((err) => {
