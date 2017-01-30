@@ -30,7 +30,7 @@ module.exports = function(serviceName) {
   }
 
   console.log(chalk.white(`Making an HTTP POST request to:`)+chalk.red(`\n${options.uri}\n`))
-  console.log(chalk.white(`With the following passed in the body:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`))
+  console.log(chalk.white(`Using JSON data from test-data.json as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`))
   rp(options)
   .then((response) => {
     console.log(chalk.white(`Response:\n`)+chalk.red(`${JSON.stringify(response, null, 2)}`));

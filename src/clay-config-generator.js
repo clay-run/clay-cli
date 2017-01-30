@@ -6,9 +6,10 @@ module.exports = {
       serviceDescription: 'A service that takes in bits and moves atoms',
       inputs: [
         {
-          "name": "varNameInCode",
+          "name": "myVariable",
           "type": "text",
-          "displayName": "Human Readable Name of Variable"
+          "displayName": "Human Readable Variable",
+          "descriptipn": "Description of variable"
         }
       ],
       serviceDisplayName: `${serviceName}`
