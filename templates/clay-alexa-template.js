@@ -1,6 +1,5 @@
 // Require your files or libraries here. You can use npm to install libraries.
 var Alexa = require('clay-alexa-sdk');
-var keen = require('keen-js');
 
 // Array of possible Awesome things that Alexa can respond with.
 const awesomeSayings = [
