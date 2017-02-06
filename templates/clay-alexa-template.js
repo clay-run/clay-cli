@@ -24,9 +24,6 @@ exports.handler = function(event, context, callback) {
   // a handler for each of your Intent types.
   console.log(event);
 
-  // Required check of the HTTP headers to confirm that the request
-  // is genuinely coming from an Alexa.
-
   var handlers = {
 
     // Intent: GetAwesomeSaying returns a random saying from the
