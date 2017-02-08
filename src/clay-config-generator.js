@@ -1,5 +1,5 @@
 module.exports = {
-  defaultTemplate: (serviceName) => {
+  defaultTemplate: (serviceName, serviceType) => {
     return {
       accountName: `public`,
       serviceName: `${serviceName}`,
@@ -9,13 +9,14 @@ module.exports = {
           "name": "myVariable",
           "type": "text",
           "displayName": "Human Readable Variable",
-          "descriptipn": "Description of variable"
+          "description": "Description of variable"
         }
       ],
-      serviceDisplayName: `${serviceName}`
+      serviceDisplayName: `${serviceName}`,
+      serviceType: `${serviceType}`
     };
   },
-  alexaTemplate: function(serviceName) {
-    return this.defaultTemplate(serviceName)
+  alexaTemplate: function(serviceName, serviceType) {
+    return this.defaultTemplate(serviceName, serviceType)
   }
 }

@@ -38,6 +38,7 @@ module.exports = function(deployConfig) {
           commandName: currentProjectConfig.serviceName,
           function_input: JSON.stringify(currentProjectConfig.inputs),
           apiToken: this.credentials.token,
+          serviceType: currentProjectConfig.serviceType,
           fileData: stdout
         },
         timeout: 0,

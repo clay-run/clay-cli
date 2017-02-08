@@ -49,14 +49,14 @@ module.exports = function(serviceName, templateName) {
 
   switch(templateName.template) {
     case 'alexa':
-      clayConfigJson  = clayConfigFactory.alexaTemplate(serviceName);
+      clayConfigJson  = clayConfigFactory.alexaTemplate(serviceName, 'alexa');
       testDataJson = clayTestDataFactory.alexaTemplate();
       packageJson = clayNodePckgFactory.alexaTemplate(clayConfigJson, this.credentials.username);
       commandFile = path.resolve(clayDir,'templates/clay-alexa-template.js')
       templateMessages = require('../templates/clay-alexa-node-text.js');
       break;
     default:
-      clayConfigJson  = clayConfigFactory.defaultTemplate(serviceName);
+      clayConfigJson  = clayConfigFactory.defaultTemplate(serviceName, 'microservice');
       testDataJson = clayTestDataFactory.defaultTemplate();
       packageJson = clayNodePckgFactory.defaultTemplate(clayConfigJson, this.credentials.username);
       commandFile = path.resolve(clayDir,'templates/clay-node-template.js')
