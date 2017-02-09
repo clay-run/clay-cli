@@ -8,6 +8,9 @@ var chalk    = require('chalk')
 
 module.exports = function(serviceName) {
 
+  // format serviceName
+  serviceName = serviceName.split('/').slice(-2).join('-');
+
   const dir = path.resolve(process.cwd(), `${serviceName}`)
 
   if(fs.existsSync(dir)) {
