@@ -8,7 +8,15 @@ var chalk    = require('chalk')
 
 module.exports = function(serviceName) {
 
-  const dir                          = path.resolve(process.cwd(), `${serviceName}`)
+  const dir = path.resolve(process.cwd(), `${serviceName}`)
+
+  if(fs.existsSync(dir)) {
+    print(chalk.white(`Directory `)+chalk.red(`${dir}`)+chalk.white(` already exists please delete it to download this Clay service`));
+    process.exit();
+  }
+
+  print(chalk.white(`Starting download of Clay service:\n`));
+
   var getFunctionOptions = {
     uri: this.apis.downloadApi,
     method: 'POST',
@@ -20,12 +28,6 @@ module.exports = function(serviceName) {
     json: true
   }
 
-
-  if(fs.existsSync(dir)) {
-    print(chalk.white(`Directory `)+chalk.red(`${dir}`)+chalk.white(` already exists please delete it to download this Clay service`));
-    process.exit();
-  }
-  print(chalk.white(`Starting download of Clay service:\n`));
   rp(getFunctionOptions)
   .then((response) => {
     var downloadOptions = {
@@ -46,7 +48,8 @@ module.exports = function(serviceName) {
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
   })
   .catch((err) => {
-    if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
+    print(chalk.white(`Please enter the name of the service or the url to the service. E.g. clay download nicoslepicos/whois or clay download http://clay.run/services/nicoslepicos/whois`))
+    print(chalk.white(`Error has occurred please contact support@clay.run`))
     process.exit();
   })
 
