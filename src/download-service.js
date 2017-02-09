@@ -43,7 +43,7 @@ module.exports = function(serviceName) {
     });
   })
   .then(() => {
-    print(chalk.white(`Successfully downloaded the Clay service to this directory`)+chalk.red(`${dir}`));
+    print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
   })
   .catch((err) => {
     if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)

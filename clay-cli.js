@@ -20,7 +20,7 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     loginApi: `${clayApi}/api/v1/auth/login`,
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
-    downloadApi: `https://max2yr7xf2.execute-api.us-west-2.amazonaws.com/prod/kareemcore-download-lambda`,
+    downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
     servicePage: `${clayApi}/services`
 }
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
