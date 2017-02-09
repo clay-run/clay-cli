@@ -20,6 +20,7 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     loginApi: `${clayApi}/api/v1/auth/login`,
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
+    downloadApi: `https://max2yr7xf2.execute-api.us-west-2.amazonaws.com/prod/kareemcore-download-lambda`,
     servicePage: `${clayApi}/services`
 }
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
@@ -27,7 +28,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run']);
+var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run', 'download']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -76,6 +77,11 @@ program
 .command('logs')
 .description('get production logs for your service')
 .action(() => service.logs());
+
+program
+.command('download <serviceName>')
+.description('download the code for a service that you own or that is public')
+.action((serviceName) => account.download(serviceName));
 
 program
 .command('list')
