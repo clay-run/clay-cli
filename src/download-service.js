@@ -21,9 +21,13 @@ module.exports = function(serviceName) {
   }
 
 
+  if(fs.existsSync(dir)) {
+    print(chalk.white(`Directory `)+chalk.red(`${dir}`)+chalk.white(` already exists please delete it to download this Clay service`));
+    process.exit();
+  }
+  print(chalk.white(`Starting download of Clay service:\n`));
   rp(getFunctionOptions)
   .then((response) => {
-    console.log(response);
     var downloadOptions = {
       uri: response.Code.Location,
       method: 'GET',
@@ -35,12 +39,11 @@ module.exports = function(serviceName) {
   })
   .then((downloadedCode) => {
     fs.writeFile(`${dir}.zip`, downloadedCode, (err) => {
-      console.log(err);
       return decompress(`${dir}.zip`, `${dir}`)
     });
   })
   .then(() => {
-    console.log('done');
+    print(chalk.white(`Successfully downloaded the Clay service to this directory`)+chalk.red(`${dir}`));
   })
   .catch((err) => {
     if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
