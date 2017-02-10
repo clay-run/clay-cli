@@ -94,9 +94,9 @@ program
 .action(() => service.test());
 
 program
-.command('run [serviceName]')
+.command('run [serviceName] [data]')
 .description('run your service in production if run from within your service directory. Optionally you can run any Clay service. Pass the full name of the service which looks like this username/servicename')
-.action((serviceName) => service.run(serviceName));
+.action((serviceName, data) => service.run(serviceName, data));
 
 program
 .command('open [serviceName]')

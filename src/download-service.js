@@ -47,12 +47,13 @@ module.exports = function(serviceName) {
       return decompress(`${dir}.zip`, `${dir}`)
     });
   })
-  .then(() => {
+  .then((result) => {
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
+    if(result.statusCode == 401) print(chalk.white(`Make sure that his service is yours or that it is a public service`))
+    else if(result.statusCode == 500)  print(chalk.white(`Error has occurred please contact support@clay.run`))
+    else print(chalk.white(`Please enter the name of the service or the url to the service. E.g. clay download nicoslepicos/whois or clay download http://clay.run/services/nicoslepicos/whois`))
   })
   .catch((err) => {
-    print(chalk.white(`Please enter the name of the service or the url to the service. E.g. clay download nicoslepicos/whois or clay download http://clay.run/services/nicoslepicos/whois`))
-    print(chalk.white(`Error has occurred please contact support@clay.run`))
     process.exit();
   })
 

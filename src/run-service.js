@@ -2,17 +2,15 @@ var path  = require('path')
  ,  rp    = require('request-promise-native')
  ,  chalk = require('chalk');
 
-module.exports = function(serviceName) {
+module.exports = function(serviceName, jsonData) {
 
   // either test-data.json or you pass parameters to it
   var urlForService;
   var data;
 
   if(serviceName != null) {
-    urlForService = `${this.apis.servicePage}/${serviceName}`
-    data = {
-      varNameInCode: 'test'
-    };
+    urlForService = `${this.apis.servicePage}/${serviceName}`;
+    data = (jsonData) ? JSON.parse(jsonData) : null;
   } else if (this.clayConfig != null && this.clayConfig.serviceName != null) {
     urlForService = `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`
     data  = require(path.resolve(process.cwd(), 'test-data.json'))
@@ -33,10 +31,11 @@ module.exports = function(serviceName) {
   console.log(chalk.white(`Using JSON data from test-data.json as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`))
   rp(options)
   .then((response) => {
+    // Currently assumes only a JSON response
     console.log(chalk.white(`Response:\n`)+chalk.red(`${JSON.stringify(response, null, 2)}`));
   })
   .catch((err) => {
     if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
-    else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
+    else console.log("An error occurred please contact support@clay.run")
   })
 }
