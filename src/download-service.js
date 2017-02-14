@@ -33,8 +33,17 @@ module.exports = function(serviceName) {
 
   rp(getFunctionOptions)
   .then((response) => {
+    if(response.statusCode == 401) {
+      print(chalk.white(`Make sure you entered the name of the service or the url to the service. E.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
+      print(chalk.white(`Also, make sure that this service exists and is owned by you or it is a public service`))
+      process.exit();
+    }
+    else if(response.statusCode == 500) {
+      print(chalk.white(`Error has occurred please contact support@clay.run`));
+      process.exit();
+    }
     var downloadOptions = {
-      uri: response.Code.Location,
+      uri: response.service.Code.Location,
       method: 'GET',
       timeout: 0,
       encoding: null,
@@ -43,15 +52,12 @@ module.exports = function(serviceName) {
     return rp(downloadOptions)
   })
   .then((downloadedCode) => {
-    fs.writeFile(`${dir}.zip`, downloadedCode, (err) => {
-      return decompress(`${dir}.zip`, `${dir}`)
-    });
+    fs.writeFileSync(`${dir}.zip`, downloadedCode)
+    return decompress(`${dir}.zip`, `${dir}`)
   })
   .then((result) => {
+    fs.removeSync(`${dir}.zip`)
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
-    if(result.statusCode == 401) print(chalk.white(`Make sure that his service is yours or that it is a public service`))
-    else if(result.statusCode == 500)  print(chalk.white(`Error has occurred please contact support@clay.run`))
-    else print(chalk.white(`Please enter the name of the service or the url to the service. E.g. clay download nicoslepicos/whois or clay download http://clay.run/services/nicoslepicos/whois`))
   })
   .catch((err) => {
     process.exit();
