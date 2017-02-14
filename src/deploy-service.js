@@ -55,7 +55,7 @@ module.exports = function(deployConfig) {
       })
       .catch((err) => {
         if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
-        else print(SERVICE_UPDATE_FAILED_MSG)
+        else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
         reject(err);
       })
     })
