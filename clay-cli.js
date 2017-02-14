@@ -56,7 +56,7 @@ var account = new Account({
 })
 
 program
-.version('0.3.5')
+.version('0.4.9')
 .command('new [serviceName]')
 .option('-t, --template <templateName>', 'Template for service')
 .description('creates a new service with the name <serviceName>. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
@@ -115,9 +115,7 @@ program
 program.parse(process.argv);
 
 
-if (!process.argv.slice(2).length) {
-  const CURR_USER_MSG = chalk.white(`You are currently signed in as: `)+chalk.red(`${clayCredentials.username}`);
-  print(CURR_USER_MSG)
+if (!process.argv.slice(2).length || Object.prototype.toString.call(program.args[0]) == '[object String]') {
   program.outputHelp();
   if(getClayConfig()) service.info();
 }
