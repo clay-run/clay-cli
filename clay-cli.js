@@ -43,7 +43,6 @@ if(process.argv[2] && !globalCommands.find((command) => command == process.argv[
     process.exit();
 }
 
-
 var service = new Service({
   credentials: clayCredentials,
   clayConfig: getClayConfig(),

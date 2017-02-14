@@ -11,7 +11,7 @@ function Service(serviceConfig) {
   this.apis        = serviceConfig.apis;
   this.servicePage = serviceConfig.servicePage;
   this.clayConfig  = serviceConfig.clayConfig
-  if(this.clayConfig) {
+  if(this.clayConfig && this.credentials) {
     this.urlForService = `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`
   }
 }

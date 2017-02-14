@@ -20,7 +20,8 @@ module.exports = function() {
     console.log(stringMessages);
   })
   .catch((err) => {
-    if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.commandName}\n`))
+    console.log(err);
+    if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
     else if(err.statusCode == 500) console.log("Service was not created. Contact support@tryclay.com")
   })
 }
