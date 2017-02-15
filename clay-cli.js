@@ -115,7 +115,7 @@ program
 program.parse(process.argv);
 
 
-if (!process.argv.slice(2).length || Object.prototype.toString.call(program.args[0]) == '[object String]') {
+if (!process.argv.slice(2).length || Object.prototype.toString.call(program.args[-1]) == '[object String]') {
   program.outputHelp();
   if(getClayConfig()) service.info();
 }
