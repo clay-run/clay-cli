@@ -59,7 +59,7 @@ program
 .version('0.4.9')
 .command('new [serviceName]')
 .option('-t, --template <templateName>', 'Template for service')
-.description('creates a new service with the name <serviceName>. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
+.description('creates a new service with the name [serviceName]. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
 .action((cmd, options) => service.create(cmd, options));
 
 program

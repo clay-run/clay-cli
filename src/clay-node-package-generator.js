@@ -1,7 +1,7 @@
 module.exports = {
   defaultTemplate: (clayConfigJson, username) => {
     return {
-      "name": `${username}/${clayConfigJson.serviceName}`,
+      "name": `${username}-${clayConfigJson.serviceName}`,
       "description": `${clayConfigJson.serviceDescription}`,
       "authors": `${username}`,
       "version": "0.0.1",
