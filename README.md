@@ -1,9 +1,8 @@
 <img src="http://i.imgur.com/MJjxLOv.png" width="474px">
 
-We're in early days. Get involved or ask questions by
-opening up Github issues or chatting with us on [Gitter](https://gitter.im/clay-run/Lobby?source=github).
+---
 
-**This is the command line tool for using Clay - The fastest way to create and deploy microservices.**
+**This repo is the command line tool for using Clay - The fastest way to create and deploy microservices.**
 
 You can learn more here: <https://www.clay.run>
 
@@ -13,7 +12,23 @@ You can learn more here: <https://www.clay.run>
 1. A set of tools that allow you to create and deploy API endpoints (microservices) in seconds.
 2. A community and registry for those microservices.
 
-Think of it like Github if the code at each repository was running and not static.
+Think of it like Github if the code at each repository was running and not static. The benefit of this is that your code is a living service that:
+- Can be used in any language - every function you write instantly becomes an API that can be used by someone in whatever language they work in.
+- People can test out via our microservice UI
+- Provides you a way to see how people use your service via our logs & helps you catch errors you might hit.
+
+We're in early days. Get involved or ask questions by opening up Github issues or chatting with us on [Gitter](https://gitter.im/clay-run/Lobby?source=github).
+
+## What Kinds of Things Can I Use Clay For
+- Building an app powered entirely by microservices
+- Programmable Web Hooks
+- Power Your Alexa Skill or Slack Bot
+- Data Processing & Enrichment
+- Scraping, Screenshoting & other things that require Headless Browsers
+
+Build your own microservices or browse our list of [publicly available microservices](https://www.clay.run/public/services)
+
+## Whatever You Wish There Was an API or Microservice For - just leave it in the Issues!
 
 ## Introduction
 
@@ -28,22 +43,6 @@ We currently support nodejs and the code is hosted as an Amazon Lambda cloud fun
 $npm install -g clay-run
 ```
 
-## Create an Alexa Skill
-
-Create a new account using
-
-```
-$ clay signup
-```
-
-Then
-
-```
-$ clay new my-alexa-skill -t alexa
-```
-
-For a complete walk through check out [this blog
-post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
 
 ## Usage - Creating microservices
 ### Signup
@@ -219,6 +218,24 @@ $ clay info
 ```
 $ clay login
 ```
+
+## Create an Alexa Skill
+
+Create a new account using
+
+```
+$ clay signup
+```
+
+Then
+
+```
+$ clay new my-alexa-skill -t alexa
+```
+
+For a complete walk through check out [this blog
+post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
+
 
 
 ## FAQ
