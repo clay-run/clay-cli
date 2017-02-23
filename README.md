@@ -1,3 +1,5 @@
+<img src="http://i.imgur.com/YL2oUsG.png" width="800px">
+
 We're in early days. Get involved or ask questions by
 opening up Github issues or chatting with us on [Gitter](https://gitter.im/clay-run/Lobby?source=github).
 
