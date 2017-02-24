@@ -57,7 +57,7 @@ module.exports = function(existingService, newService) {
   })
   .then(() => {
     fs.removeSync(`${dir}.zip`)
-    fs.renameSync(`${dir}/${serviceName.split('-').slice(1).join('-')}.js`, `${dir}/${newService}.js`)
+    if(!fs.existsSync(`${dir}/index.js`)) fs.renameSync(`${dir}/${serviceName.split('-').slice(1).join('-')}.js`, `${dir}/index.js`)
     var clayConfig = require(`${dir}/clay-config.json`);
     clayConfig.serviceName = newService;
     var clayConfigJson = JSON.stringify(clayConfig, null, 2)

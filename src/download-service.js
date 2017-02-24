@@ -57,6 +57,10 @@ module.exports = function(serviceName) {
   })
   .then((result) => {
     fs.removeSync(`${dir}.zip`)
+    var clayConfig = require(`${dir}/clay-config.json`);
+    clayConfig.serviceName = serviceName.split('-').slice(1).join('-');
+    var clayConfigJson = JSON.stringify(clayConfig, null, 2)
+    fs.writeFileSync(`${dir}/clay-config.json`, clayConfigJson);
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
   })
   .catch((err) => {

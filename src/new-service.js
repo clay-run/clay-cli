@@ -68,7 +68,7 @@ module.exports = function(serviceName, templateName) {
   // Copy files that come with the package as the template
   print(CREATING_SERVICE_MSG);
 
-  fs.copyAsync(commandFile, path.resolve(dir, `${serviceName}.js`))
+  fs.copyAsync(commandFile, path.resolve(dir, `index.js`))
   .then(() => {
     return fs.writeFileAsync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   })
