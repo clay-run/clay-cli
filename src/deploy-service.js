@@ -21,7 +21,7 @@ module.exports = function(deployConfig) {
       cwd: dir
     };
 
-    if(deployConfig.mode == 'PUT') print(UPDATING_SERVICE_MSG)
+    if(deployConfig.mode == 'PUT' && !deployConfig.suppressProgressMessages) print(UPDATING_SERVICE_MSG)
 
     exec(macCommand, execOptions, (err, stdout) => {
       if (err) {
@@ -48,12 +48,16 @@ module.exports = function(deployConfig) {
       rp(requestOptions)
       .then((response) => {
         if(response.result == true && deployConfig.mode  == 'PUT') {
-          print(SERVICE_UPDATED_MSG)
+          var time = new Date();
+          if(!deployConfig.suppressProgressMessages) {
+            print(SERVICE_UPDATED_MSG, time.toLocaleDateString(), time.toLocaleTimeString())
+          }
           print(SERVICE_URL_MSG)
         }
           resolve(response);
       })
       .catch((err) => {
+        if(process.env.CLAY_DEV) console.log(err);
         if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
         else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
         reject(err);

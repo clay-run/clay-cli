@@ -4,6 +4,7 @@ var   deployService = require('./deploy-service.js')
  ,    testService   = require('./test-service.js')
  ,    runService    = require('./run-service.js')
  ,    openService   = require('./open-service.js')
+ ,    forkService   = require('./fork-service.js')
  ,    infoService   = require('./get-service-info.js');
 
 function Service(serviceConfig) {
@@ -22,6 +23,7 @@ Service.prototype.logs   = logService;
 Service.prototype.info   = infoService;
 Service.prototype.test   = testService;
 Service.prototype.run    = runService;
+Service.prototype.fork   = forkService;
 Service.prototype.open   = openService;
 
 module.exports = Service;

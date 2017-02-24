@@ -21,6 +21,7 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
     downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
+    forksApi: `${clayApi}/api/v1/services/public/methods/`,
     servicePage: `${clayApi}/services`
 }
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
@@ -28,7 +29,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run', 'download']);
+var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run', 'download', 'fork']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -76,6 +77,11 @@ program
 .command('logs')
 .description('get production logs for your service')
 .action(() => service.logs());
+
+program
+.command('fork <existingService> <newService>')
+.description('fork <existingService> to <newServiceName>')
+.action((existingService, newService) => service.fork(existingService, newService));
 
 program
 .command('download <serviceName>')
