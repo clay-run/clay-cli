@@ -178,7 +178,7 @@ This will run your code and use the ```test-data.json``` file as the key-value p
 Logging will work normally and output to STDOUT.
 
 ### Run on Production from the CLI
-Coming soon
+$ clay run nameOfService `{"myVariable: value"}`
 ### Run on Production from code
 Make an HTTP POST call to:
 
@@ -203,6 +203,15 @@ or view the logs at:
 
 <https://www.clay.run/your_username/your_service_name>
  
+### Fork a function
+```
+$ clay fork serviceToFork newServiceName
+
+You can use the name of service to fork it e.g. kareemcore/whois-deluxe
+or a url https://clay.run/services/kareemcore/whois-deluxe
+
+Then enter a valid name as the new service name.
+```
 
 ### List All of Your Services
 ```

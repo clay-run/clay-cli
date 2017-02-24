@@ -40,6 +40,6 @@ module.exports = function(serviceName, jsonData) {
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
     if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
-    else console.log("An error occurred please contact support@clay.run")
+    else if(err.statusCode >= 500) console.log("An error occurred please contact support@clay.run")
   })
 }
