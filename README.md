@@ -1,7 +1,6 @@
 <img src="http://i.imgur.com/Z0vvLkI.png" width="720px">
 
 ---
-
 **This repo is the command line tool for using Clay - The fastest way to create and deploy microservices.**
 
 You can learn more here: <https://www.clay.run>
@@ -244,3 +243,5 @@ Coming soon
 The MIT License (MIT)
 
 Copyright (c) 2016-2017 Clay Labs Inc
+
+<a href='http://www.clay.run/public/services/' target='_blank'><img src='https://clay.run/assets/clay-button-white.png' /></a>
