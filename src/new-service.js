@@ -9,7 +9,7 @@ var   path                 = require('path')
 
 
 module.exports = function(serviceName, templateName) {
-  const dir                          = path.resolve(process.cwd(), `${this.credentials.username}-${serviceName}`)
+  const dir                          = path.resolve(process.cwd(), `${serviceName}`)
    ,    clayDir                      = path.resolve(__dirname, '..')
    ,    packagePath                  = path.resolve(dir, 'package.json')
    ,    clayConfigPath               = path.resolve(dir, 'clay-config.json')
