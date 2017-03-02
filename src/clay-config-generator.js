@@ -1,8 +1,9 @@
 module.exports = {
-  defaultTemplate: (serviceName, serviceType) => {
+  defaultTemplate: (serviceName, serviceType, username) => {
     return {
       accountName: `public`,
       serviceName: `${serviceName}`,
+      userName: `${username}`,
       serviceDescription: 'A service that takes in bits and moves atoms',
       inputs: [
         {
@@ -16,7 +17,7 @@ module.exports = {
       serviceType: `${serviceType}`
     };
   },
-  alexaTemplate: function(serviceName, serviceType) {
-    return this.defaultTemplate(serviceName, serviceType)
+  alexaTemplate: function(serviceName, serviceType, username) {
+    return this.defaultTemplate(serviceName, serviceType, username)
   }
 }

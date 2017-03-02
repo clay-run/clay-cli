@@ -14,7 +14,8 @@ module.exports = function(serviceName, jsonData) {
     data = (jsonData) ? JSON.parse(jsonData) : null;
     dataMsg = chalk.white(`Passing the following JSON data as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`);
   } else if (this.clayConfig != null && this.clayConfig.serviceName != null) {
-    urlForService = `${this.apis.servicePage}/${this.credentials.username}/${this.clayConfig.serviceName}`
+    var usernameForService = (this.clayConfig.username) ? this.clayConfig.username : this.credentials.username;
+    urlForService = `${this.apis.servicePage}/${usernameForService}/${this.clayConfig.serviceName}`
     data  = require(path.resolve(process.cwd(), 'test-data.json'))
     dataMsg = chalk.white(`Using JSON data from test-data.json as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`);
   } else {
