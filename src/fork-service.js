@@ -6,10 +6,14 @@ var chalk    = require('chalk')
  ,  rp       = require('request-promise-native');
 
 
-module.exports = function(existingService, newService) {
+module.exports = function(existingService, forkedService) {
 
+  var newService;
   // format serviceName also handles urls
   var serviceName = existingService.split('/').slice(-2).join('-');
+  if(!forkedService) {
+    newService = existingService.split('/').slice(-1).join('-');
+  }
 
   const dir = path.resolve(process.cwd(), `${this.credentials.username}-${newService}`)
 

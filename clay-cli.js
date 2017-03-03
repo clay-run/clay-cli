@@ -79,7 +79,7 @@ program
 .action(() => service.logs());
 
 program
-.command('fork <existingService> <newService>')
+.command('fork <existingService> [newService]')
 .description('fork <existingService> to <newServiceName>')
 .action((existingService, newService) => service.fork(existingService, newService));
 
