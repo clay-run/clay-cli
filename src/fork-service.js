@@ -73,6 +73,7 @@ module.exports = function(existingService, forkedService) {
   })
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
+    print(chalk.white(err.error.error));
     process.exit();
   })
 
