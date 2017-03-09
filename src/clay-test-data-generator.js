@@ -1,7 +1,7 @@
 module.exports = {
   defaultTemplate: () => {
     return {
-      "varNameInCode": "testValueOfVar"
+      "myVariable": "testValueOfVar"
     }
   },
   alexaTemplate: () => {
