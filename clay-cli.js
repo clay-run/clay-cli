@@ -29,7 +29,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup'];
-var globalCommands = authCommands.concat(['new', 'list', '--version', 'open', 'run', 'download', 'fork']);
+var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -57,11 +57,13 @@ var account = new Account({
 })
 
 program
+.description(chalk.white('Clay allows you to instantly build and remix cloud hosted functions'))
 .version('0.4.9')
+.usage('<command>')
 .command('new [serviceName]')
 .option('-t, --template <templateName>', 'Template for service')
 .description('creates a new service with the name [serviceName]. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
-.action((cmd, options) => service.create(cmd, options));
+.action((cmd, options) => service.create(cmd, options))
 
 program
 .command('deploy')
