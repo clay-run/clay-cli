@@ -87,8 +87,13 @@ program
 
 program
 .command('download <serviceName>')
-.description('download the code for a service that you own or that is public <serviceName> can be the name of the service or a url to that service on clay. E.g. nicoslepicos/whois or http://clay.run/services/nicoslepicos/whois')
+.description('download the code for a service that you own or that is public. <serviceName> can be the name of the service e.g. nicoslepicos/whois or a url to that service on clay.')
 .action((serviceName) => account.download(serviceName));
+
+program
+.command('whoami')
+.description('find out the account that you are logged in as')
+.action(() => account.whoami());
 
 program
 .command('list')
