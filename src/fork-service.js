@@ -13,6 +13,8 @@ module.exports = function(existingService, forkedService) {
   var serviceName = existingService.split('/').slice(-2).join('-');
   if(!forkedService) {
     newService = existingService.split('/').slice(-1).join('-');
+  } else {
+    newService = forkedService;
   }
 
   const dir = path.resolve(process.cwd(), `${this.credentials.username}-${newService}`)
