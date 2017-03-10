@@ -21,9 +21,9 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
     downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
-    forksApi: `${clayApi}/api/v1/services/public/methods/`,
     servicePage: `${clayApi}/services`
 }
+
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
@@ -71,34 +71,9 @@ program
 .action(() => service.deploy({mode: 'PUT', dir: process.cwd()}));
 
 program
-.command('info')
-.description('get a description of your service')
-.action(() => service.info());
-
-program
 .command('logs')
 .description('get production logs for your service')
 .action(() => service.logs());
-
-program
-.command('fork <existingService> [newService]')
-.description('fork <existingService> to <newServiceName>')
-.action((existingService, newService) => service.fork(existingService, newService));
-
-program
-.command('download <serviceName>')
-.description('download the code for a service that you own or that is public. <serviceName> can be the name of the service e.g. nicoslepicos/whois or a url to that service on clay.')
-.action((serviceName) => account.download(serviceName));
-
-program
-.command('whoami')
-.description('find out the account that you are logged in as')
-.action(() => account.whoami());
-
-program
-.command('list')
-.description('list services in your account')
-.action(() => account.list());
 
 program
 .command('test')
@@ -114,6 +89,46 @@ program
 .command('open [serviceName]')
 .description('open service config page in web browser')
 .action((serviceName) => service.open(serviceName));
+
+program
+.command('info')
+.description('get a description of your service')
+.action(() => service.info());
+
+program
+.command('add:env [key] [value]')
+.description('add an environment variable for api keys, secrets, and any static code that you should not be in your code')
+.action((key, value) => service.addEnv(key, value));
+
+program
+.command('delete:env')
+.description('delete an environment variable')
+.action(() => service.info());
+
+program
+.command('list:env')
+.description('list environment variables that are set up for this service')
+.action(() => service.listEnv());
+
+program
+.command('fork <existingService> [newService]')
+.description('fork <existingService> to <newServiceName>')
+.action((existingService, newService) => service.fork(existingService, newService));
+
+program
+.command('download <serviceName>')
+.description('download the code for a service that you own or that is public. <serviceName> can be the name of the service e.g. nicoslepicos/whois or a url to that service on clay.')
+.action((serviceName) => account.download(serviceName));
+
+program
+.command('list')
+.description('list services in your account')
+.action(() => account.list());
+
+program
+.command('whoami')
+.description('find out the account that you are logged in as')
+.action(() => account.whoami());
 
 program
 .command('signup')

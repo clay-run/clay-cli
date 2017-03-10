@@ -25,7 +25,7 @@ module.exports = function(existingService, forkedService) {
   print(chalk.white(`Starting fork of `)+chalk.red(`${existingService}`)+chalk.white(` (this may take a moment please wait):\n`));
 
   var getFunctionOptions = {
-    uri: this.apis.forksApi+`${serviceName}/fork`,
+    uri: this.apis.methodsApi+`${serviceName}/fork`,
     method: 'POST',
     body: {
       apiToken: this.credentials.token,
