@@ -24,7 +24,8 @@ module.exports = function() {
 
   rp(requestOptions)
   .then((response) => {
-    console.log(JSON.stringify(response.envVars, null, 2))
+    if(response.envVars) console.log(JSON.stringify(response.envVars, null, 2))
+    else console.log("No Environment Variables")
   })
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
