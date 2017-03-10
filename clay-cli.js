@@ -103,7 +103,7 @@ program
 program
 .command('delete:env')
 .description('delete an environment variable')
-.action(() => service.info());
+.action((key) => service.deleteEnv(key));
 
 program
 .command('list:env')
