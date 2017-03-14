@@ -53,8 +53,7 @@ module.exports = function(serviceName) {
   })
   .then((downloadedCode) => {
     fs.writeFileSync(`${dir}.zip`, downloadedCode)
-    console.log("decompressing")
-    zipFolder = new zip(`${dir}.zip`)
+    var zipFolder = new zip(`${dir}.zip`)
     zipFolder.extractAllTo(`${dir}`)
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
     fs.removeSync(`${dir}.zip`)
