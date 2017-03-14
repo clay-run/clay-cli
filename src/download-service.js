@@ -2,7 +2,7 @@ var chalk    = require('chalk')
  ,  print    = console.log
  ,  fs       = require('fs-extra')
  ,  path     = require('path')
- ,  decompress  = require('decompress')
+ ,  zip      = require('adm-zip')
  ,  rp       = require('request-promise-native');
 
 
@@ -53,17 +53,14 @@ module.exports = function(serviceName) {
   })
   .then((downloadedCode) => {
     fs.writeFileSync(`${dir}.zip`, downloadedCode)
-    return decompress(`${dir}.zip`, `${dir}`)
-  })
-  .then((result) => {
-    fs.removeSync(`${dir}.zip`)
-    var clayConfig = require(`${dir}/clay-config.json`);
-    clayConfig.serviceName = serviceName.split('-').slice(1).join('-');
-    var clayConfigJson = JSON.stringify(clayConfig, null, 2)
-    fs.writeFileSync(`${dir}/clay-config.json`, clayConfigJson);
+    console.log("decompressing")
+    zipFolder = new zip(`${dir}.zip`)
+    zipFolder.extractAllTo(`${dir}`)
     print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
+    fs.removeSync(`${dir}.zip`)
   })
   .catch((err) => {
+    if(process.env.CLAY_DEV) console.log(err);
     process.exit();
   })
 
