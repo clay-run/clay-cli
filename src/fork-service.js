@@ -66,6 +66,8 @@ module.exports = function(existingService, forkedService) {
     if(!fs.existsSync(`${dir}/index.js`)) fs.renameSync(`${dir}/${serviceName.split('-').slice(1).join('-')}.js`, `${dir}/index.js`)
     var clayConfig = require(`${dir}/clay-config.json`);
     clayConfig.serviceName = newService;
+    clayConfig.serviceDsiplayName = newService;
+    clayConfig.username = this.credentials.username;
     var clayConfigJson = JSON.stringify(clayConfig, null, 2)
     fs.writeFileSync(`${dir}/clay-config.json`, clayConfigJson);
     return this.deploy({mode: 'PUT', dir: dir, suppressProgressMessages: true});
