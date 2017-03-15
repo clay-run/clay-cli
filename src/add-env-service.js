@@ -11,9 +11,9 @@ module.exports = function(key, value) {
   const currentProjectConfig = require(path.resolve(process.cwd(), 'clay-config.json'))
   const USER_NOT_AUTHORIZED_ERR = chalk.white(`Current user is not authorized to create or update services. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
 
-  console.log(chalk.white(UPDATING_SERVICE_MSG));
+  print(chalk.white(UPDATING_SERVICE_MSG));
   if(!key || !value) {
-    console.log(chalk.white(SERVICE_UPDATE_FAILED_MSG));
+    print(chalk.white(SERVICE_UPDATE_FAILED_MSG));
     process.exit();
   }
 
