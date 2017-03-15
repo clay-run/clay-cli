@@ -18,8 +18,9 @@ module.exports = function(key, value) {
   }
 
 
+  var username = currentProjectConfig.username || this.credentials.username
   var listOptions = {
-    uri: this.apis.methodsApi+`/${this.credentials.username}-${currentProjectConfig.serviceName}`,
+    uri: this.apis.methodsApi+`/${username}-${currentProjectConfig.serviceName}`,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token

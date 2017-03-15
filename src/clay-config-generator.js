@@ -3,7 +3,7 @@ module.exports = {
     return {
       accountName: `public`,
       serviceName: `${serviceName}`,
-      userName: `${username}`,
+      username: `${username}`,
       serviceDescription: 'A service that takes in bits and moves atoms',
       inputs: [
         {

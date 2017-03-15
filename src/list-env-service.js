@@ -12,8 +12,9 @@ module.exports = function() {
 
   console.log(chalk.white(UPDATING_SERVICE_MSG));
 
+  var username = currentProjectConfig.username || this.credentials.username
   var requestOptions = {
-    uri: this.apis.methodsApi+`/${this.credentials.username}-${currentProjectConfig.serviceName}`,
+    uri: this.apis.methodsApi+`/${username}-${currentProjectConfig.serviceName}`,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token
