@@ -270,7 +270,19 @@ or view the logs at:
 
 <https://www.clay.run/your_username/your_service_name>
  
-## Managing your clay services
+## Managing your Clay services
+
+### Downloading code for a Clay service
+
+```
+$ clay download nameOfService
+```
+
+The service must be either public or owned by you in order to download it. 
+
+Downloading a public service allows you to have read-only access to the code.  
+
+If you'd like to make changes to a public service you have to fork it to create your own version and make changes to that. 
 
 ### List All of Your Services
 ```
