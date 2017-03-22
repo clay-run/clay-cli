@@ -12,6 +12,7 @@ You can learn more here: <https://www.clay.run>
 2. A community and registry for those microservices.
 
 Think of it like Github if the code at each repository was running and not static. The benefit of this is that your code is a living service that:
+
 - Can be used in any language - every function you write instantly becomes an API that can be used by someone in whatever language they work in.
 - People can test out via our microservice UI
 - Provides you a way to see how people use your service via our logs & helps you catch errors you might hit.
@@ -27,13 +28,13 @@ We're in early days. Get involved or ask questions by opening up Github issues o
 
 Build your own microservices or browse our list of [publicly available microservices](https://www.clay.run/public/services)
 
-## Whatever You Wish There Was an API or Microservice For - just leave it in the Issues!
+### You can open up an issue if you are looking for a microservice or api that is not available in our public registry and we will get it built!
 
 ## Introduction
 
 Clay-Cli is a command line tool that allows you to quickly create microservices using Clay.
 
-We currently support nodejs and the code is hosted as an Amazon Lambda cloud function. This means that the microservices are auto-scaling and production ready.
+We currently support nodejs. The microservices are auto-scaling and production ready.
 
 
 ## Install
@@ -53,8 +54,11 @@ $ clay signup
 
 Follow the interactive instructions. You just need an email, username and a password.
 
-### Create first service
 Now you're ready to create your first service
+
+
+### There are two ways to get started:
+### 1. Create a new service
 
 ```
 $ clay new <your-service-name>
@@ -67,6 +71,22 @@ if you want to build an Alexa Skill simply run the following
 ```
 $ clay new <your-service-name> -t alexa
 ```
+
+### 2. Fork an existing function
+```
+$ clay fork serviceToFork newServiceName
+```
+You can use the name of service to fork
+
+e.g. ```kareemcore/whois-deluxe```
+or a url ```https://clay.run/services/kareemcore/whois-deluxe```
+
+You can find a list of public functions that you can fork here:
+[publicly available microservices](https://www.clay.run/public/services)
+
+
+Then enter a valid name as the new service name. Do not include your username as part of the newServiceName
+
 
 Next change to your service directory:
 
@@ -84,6 +104,8 @@ It should look like this:
 	- clay-config.json
 	- test-data.json
 ```
+
+
 ### Edit Code
 You can now edit the nodejs code in ```your-service-name.js```
 
@@ -108,7 +130,10 @@ exports.handler = function(event, context, callback) {
   
   var result = JSON.stringify(eventVars)
   
-  // Do not change this: This ends the service call with the results, HTTP 200 status code and headers to allow cross origin requests and to indicate that the result is JSON.
+  // Do not change this: 
+  // This ends the service call with the results, 
+  // HTTP 200 status code and headers to allow cross origin requests 
+  // and to indicate that the result is JSON.
   
   context.succeed({"body": result,
                   "statusCode": 200,
@@ -134,17 +159,17 @@ The config file looks like this:
 
 ```
 {
-  "accountName": "eau",
-  "serviceName": "eau",
+  "accountName": "public",
+  "serviceName": "get-all-images",
   "serviceDescription": "A service that takes in bits and moves atoms",
   "inputs": [
     {
-      "name": "varNameInCode",
+      "name": "myVariable",
       "type": "text",
-      "displayName": "Human Readable Name of Variable"
+      "displayName": "My Variable"
     }
   ],
-  "serviceDisplayName": "eau"
+  "serviceDisplayName": "Get All Images"
 }
 ```
 
@@ -159,25 +184,67 @@ This is used by Clay to automatically created a visual interface that you can us
 ```inputs```: is an array of JSON objects with a
 
   - ```name```: variable name that you use in the code
-  - ```type```: type of variable. Currently supported are ```text```, ```date```, ```image```, ```file```, ```json```
+  - ```type```: type of variable. 
+  
+  Currently supported are ```text```, ```date```, ```image```, ```file```, ```json```, ```address```, ```url```, ```select```. Use ```text``` when you want to pass arbitrary text including an []
   - ```displayName```: this is the name that shows up in the Clay's UI to idenitfy this variable
   
 ```serviceDisplayName```: this is the name that shows up in Clay's UI to identify this service 
   
- 
+### Using Private/Secret Environment Variables
+
+To add a new key and value pair:
+
+```$ clay add:env key value ```
+
+If the value has special characters in it enclose the whole value in single quotes.
+
+To delete an existing key
+
+```$ clay delete:env key``` 
+
+To list all variables
+
+```$ clay list:env```
+
+The environment variables are accessible through 
+
+```process.env.key```
+
+where key is the name of your key.
+
+
+## Running your service
 
 
 ### Run Locally
 To run locally call:
 
 ```
-$ clay run
+$ clay test
 ```
 This will run your code and use the ```test-data.json``` file as the key-value pairs that get passed to the function's ```event.body``` variable.
 
 Logging will work normally and output to STDOUT.
 
 ### Run on Production from the CLI
+If you are in a Clay service directory simply type
+
+```
+$ clay run
+```
+
+This will run you code use the ```test-data.json``` file as the key-value pairs that get passed to the function's ```event.body``` variable.
+
+You can also pass in custom key-value pairs for that invocation with the following command:
+
+```
+$ clay run `{"myVariable: value"}`
+```
+
+Finally you can run any publicly accessible clay service with the following command:
+
+
 $ clay run nameOfService `{"myVariable: value"}`
 ### Run on Production from code
 Make an HTTP POST call to:
@@ -203,15 +270,7 @@ or view the logs at:
 
 <https://www.clay.run/your_username/your_service_name>
  
-### Fork a function
-```
-$ clay fork serviceToFork newServiceName
-
-You can use the name of service to fork it e.g. kareemcore/whois-deluxe
-or a url https://clay.run/services/kareemcore/whois-deluxe
-
-Then enter a valid name as the new service name.
-```
+## Managing your clay services
 
 ### List All of Your Services
 ```
@@ -228,21 +287,15 @@ $ clay login
 ```
 
 ## Create an Alexa Skill
+For a complete walk through check out [this blog
+post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
 
-Create a new account using
-
-```
-$ clay signup
-```
-
-Then
 
 ```
 $ clay new my-alexa-skill -t alexa
 ```
 
-For a complete walk through check out [this blog
-post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
+
 
 
 
