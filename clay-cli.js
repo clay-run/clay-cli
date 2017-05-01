@@ -29,7 +29,7 @@ var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
 if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
-var authCommands = ['login', 'signup'];
+var authCommands = ['login', 'signup', 'logout'];
 var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
