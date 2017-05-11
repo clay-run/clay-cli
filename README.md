@@ -307,10 +307,6 @@ post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-sec
 $ clay new my-alexa-skill -t alexa
 ```
 
-
-
-
-
 ## FAQ
 Coming soon
 ## License
