@@ -146,6 +146,13 @@ program
 .description('show this help')
 .action(() => program.outputHelp());
 
+program
+.on('*', function(cmd){
+  this.commands.some(function (command) {
+      return command._name === cmd[0];
+    }) || this.help();
+})
+
 program.parse(process.argv);
 
 
