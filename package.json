@@ -4,7 +4,7 @@
   "authors": "Kareem Amin and Nicolae Rusan",
   "version": "0.4.21",
   "private": false,
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "dependencies": {
     "adm-zip": "0.4.7",
     "chalk": "1.1.3",
@@ -23,12 +23,14 @@
     "node": ">=4.0"
   },
   "devDependencies": {
-    "chai": "3.5.0"
+    "chai": "3.5.0",
+    "eslint": "^3.19.0"
   },
   "bin": {
     "clay": "clay-cli.js"
   },
   "scripts": {
-    "start": "node clay-cli.js"
+    "start": "node clay-cli.js",
+    "test": "eslint clay-cli.js src"
   }
 }

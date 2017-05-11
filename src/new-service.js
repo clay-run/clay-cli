@@ -84,11 +84,11 @@ module.exports = function(serviceName, templateName) {
   .then(() => {
     return exec('npm install', {cwd: dir})
   })
-  .then((result) => {
+  .then(() => {
     // Set the directory to act on as the new service directory
     return this.deploy({mode: 'POST', dir: dir})
   })
-  .then((deployResponse) => {
+  .then(() => {
     var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
     print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
   })
