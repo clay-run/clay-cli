@@ -1,0 +1,16 @@
+{
+  "accountName": "public",
+  "serviceName": "test-new-cli",
+  "username": "theo-",
+  "serviceDescription": "A service that takes in bits and moves atoms",
+  "inputs": [
+    {
+      "name": "myVariable",
+      "type": "text",
+      "displayName": "Human Readable Variable",
+      "description": "Description of variable"
+    }
+  ],
+  "serviceDisplayName": "test-new-cli",
+  "serviceType": "microservice"
+}

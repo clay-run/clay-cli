@@ -1,0 +1,11 @@
+{
+  "name": "theo--test-new-cli",
+  "description": "A service that takes in bits and moves atoms",
+  "authors": "theo-",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "start": "node test-new-cli"
+  }
+}
