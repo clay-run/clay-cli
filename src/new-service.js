@@ -5,7 +5,9 @@ var   path                 = require('path')
  ,    exec                 = require('child-process-promise').exec
  ,    clayTestDataFactory  = require('./clay-test-data-generator')
  ,    clayNodePckgFactory  = require('./clay-node-package-generator')
-,     fs                   = require('fs-extra-promise');
+ ,    fs                   = require('fs-extra-promise')
+ ,    inquirer             = require('inquirer')
+ ,    clui                 = require('clui');
 
 
 module.exports = function(serviceName, templateName) {
@@ -67,32 +69,43 @@ module.exports = function(serviceName, templateName) {
 
   // Copy files that come with the package as the template
   print(CREATING_SERVICE_MSG);
+  Spinner = clui.Spinner;
+  var status = new Spinner('Creating service configuration file..');
+  status.start();
 
   fs.copyAsync(commandFile, path.resolve(dir, `index.js`))
   .then(() => {
+    status.message('Writing Clay configuration file..');
     return fs.writeFileAsync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
   })
   .then(() => {
+    status.message('Writing test data file..');
     return fs.writeFileAsync(testDataPath, JSON.stringify(testDataJson, null, 2));
   })
   .then(() => {
+    status.message('Writing npm package file..');
    return fs.writeFileAsync(packagePath, JSON.stringify(packageJson, null, 2));
   })
   .then(() => {
+    status.message('Creating npm_modules..');
     return fs.mkdirAsync(path.resolve(dir, 'node_modules'));
   })
   .then(() => {
+    status.message('Installing modules..');
     return exec('npm install', {cwd: dir})
   })
   .then((result) => {
+    status.message('Deploying your service..');
     // Set the directory to act on as the new service directory
     return this.deploy({mode: 'POST', dir: dir})
   })
   .then((deployResponse) => {
+    status.stop();
     var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
     print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
   })
   .catch((err) => {
+    status.stop();
     if(process.env.CLAY_DEV) console.log(err);
     if(err && !err.statusCode) print(SERVICE_NOT_CREATED)
     else if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
