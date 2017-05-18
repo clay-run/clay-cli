@@ -46,7 +46,6 @@ module.exports = function(serviceName) {
     ,       templateName                 = answers.templateName
     ,       dir                          = path.resolve(process.cwd(), `${serviceName}`)
     ,       NO_SERVICE_NAME_ERR_MSG      = chalk.white("You need a name for your service. Use:\n\n")+chalk.red("clay new <serviceName>\n")+chalk.white("\nReplace serviceName with the name of your service and do not include the angle brackets.")
-    ,       CREATING_SERVICE_MSG         = chalk.white('Creating your service, one moment:\n')
     ,       DOCS_LINK                    = 'https://www.clay.run/docs'
     ,       SERVICE_NOT_CREATED          = chalk.white("Service was not created. Contact support@tryclay.com") + chalk.white(`\nCleaning up any files or directories that were created`)
     ,       packagePath                  = path.resolve(dir, 'package.json')
@@ -91,7 +90,6 @@ module.exports = function(serviceName) {
 
 
         // Copy files that come with the package as the template
-        print(CREATING_SERVICE_MSG);
         Spinner = clui.Spinner;
         var status = new Spinner('Creating service configuration file..');
         status.start();
