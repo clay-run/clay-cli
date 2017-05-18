@@ -61,7 +61,7 @@ program
 .description(chalk.white('Clay allows you to instantly build and remix cloud hosted functions'))
 .version('0.4.9')
 .usage('<command>')
-.command('new [serviceName]')
+.command('new')
 .option('-t, --template <templateName>', 'Template for service')
 .description('creates a new service with the name [serviceName]. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
 .action((cmd, options) => service.create(cmd, options))
@@ -73,7 +73,7 @@ program
 
 program
 .command('logs')
-.description('get production logs for your service')
+.description('Get production logs for your service')
 .action(() => service.logs());
 
 program

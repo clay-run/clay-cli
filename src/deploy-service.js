@@ -6,7 +6,9 @@ var path                      = require('path')
  ,  macCommand                = 'zip -r  - node_modules * | base64'
  ,  UPDATING_SERVICE_MSG      = chalk.white(`Updating Service...\n`)
  ,  SERVICE_UPDATED_MSG       = chalk.white(`Service Updated.`)
- ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`);
+ ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`)
+ ,  clui                      = require('clui')
+ ,  Spinner                   = clui.Spinner;
 
 module.exports = function(deployConfig) {
   return new Promise((resolve, reject) =>  {
@@ -22,6 +24,9 @@ module.exports = function(deployConfig) {
     };
 
     if(deployConfig.mode == 'PUT' && !deployConfig.suppressProgressMessages) print(UPDATING_SERVICE_MSG)
+
+    var status = new Spinner('Building your service..');
+    status.start();
 
     exec(macCommand, execOptions, (err, stdout) => {
       if (err) {
@@ -45,8 +50,10 @@ module.exports = function(deployConfig) {
         json: true
       }
 
+      status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
       rp(requestOptions)
       .then((response) => {
+        status.stop();
         if(response.result == true && deployConfig.mode  == 'PUT') {
           var time = new Date();
           if(!deployConfig.suppressProgressMessages) {
@@ -57,6 +64,7 @@ module.exports = function(deployConfig) {
           resolve(response);
       })
       .catch((err) => {
+        status.stop();
         if(process.env.CLAY_DEV) console.log(err);
         if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
         else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
