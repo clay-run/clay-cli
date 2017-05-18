@@ -10,12 +10,14 @@ var   path                 = require('path')
  ,    clui                 = require('clui');
 
 
-module.exports = function(serviceName, templateName) {
+module.exports = function(serviceName) {
   var clayConfigJson;
   var testDataJson;
   var packageJson;
   var commandFile;
   var templateMessages;
+
+  const INVALID_SERVICE_NAME_ERR_MSG = chalk.red("You must enter a valid name for the service. Only use lower case letters, numbers, dashes or an underscore.")
 
   inquirer.prompt([{
       name: 'serviceName',
@@ -30,12 +32,20 @@ module.exports = function(serviceName, templateName) {
               return 'The name of your service cannot be empty.';
           }
       }
+  }, {
+      name: 'templateName',
+      type: 'list',
+      choices: [
+          'microservice (default)',
+          'alexa'
+      ],
+      message: 'Which template do you want to use (press enter for default)'
   }]).then(function(answers) {
     const   clayDir                      = path.resolve(__dirname, '..')
     ,       serviceName                  = answers.serviceName
+    ,       templateName                 = answers.templateName
     ,       dir                          = path.resolve(process.cwd(), `${serviceName}`)
     ,       NO_SERVICE_NAME_ERR_MSG      = chalk.white("You need a name for your service. Use:\n\n")+chalk.red("clay new <serviceName>\n")+chalk.white("\nReplace serviceName with the name of your service and do not include the angle brackets.")
-    ,       INVALID_SERVICE_NAME_ERR_MSG = chalk.red("You must enter a valid name for the service. Only use lower case letters, numbers, dashes or an underscore.")
     ,       CREATING_SERVICE_MSG         = chalk.white('Creating your service, one moment:\n')
     ,       DOCS_LINK                    = 'https://www.clay.run/docs'
     ,       SERVICE_NOT_CREATED          = chalk.white("Service was not created. Contact support@tryclay.com") + chalk.white(`\nCleaning up any files or directories that were created`)
@@ -62,7 +72,7 @@ module.exports = function(serviceName, templateName) {
             return
         }
 
-        switch(templateName.template) {
+        switch(templateName) {
             case 'alexa':
             clayConfigJson  = clayConfigFactory.alexaTemplate(serviceName, 'alexa', this.credentials.username);
             testDataJson = clayTestDataFactory.alexaTemplate();
