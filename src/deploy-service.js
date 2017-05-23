@@ -68,7 +68,9 @@ module.exports = function(deployConfig) {
       rp(requestOptions)
       .then((response) => {
         status.stop();
-        console.log(('Your service weights ' + archive.pointer() + ' bytes.'));
+        var bytes = archive.pointer();
+        var mbs = Math.floor(((bytes / 1024) / 1024) * 100) / 100;
+        console.log(('Your service weights ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
         if(response.result == true && deployConfig.mode  == 'PUT') {
           var time = new Date();
           if(!deployConfig.suppressProgressMessages) {
