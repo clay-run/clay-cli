@@ -29,7 +29,7 @@ module.exports = function(deployConfig) {
     var archive = archiver('zip');
 
     // Adding the function directory
-    archive.directory('.', true, { date: new Date() });
+    archive.directory(deployConfig.dir || '.', true, { date: new Date() });
 
     // On zipping error
     archive.on('error', function(err) {    
