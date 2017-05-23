@@ -30,7 +30,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup', 'logout'];
-var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help']);
+var globalCommands = authCommands.concat(['new', 'list','--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -145,6 +145,13 @@ program
 .command('help')
 .description('show this help')
 .action(() => program.outputHelp());
+
+program
+.on('*', function(cmd){
+  this.commands.some(function (command) {
+      return command._name === cmd[0];
+    }) || this.help();
+})
 
 program.parse(process.argv);
 

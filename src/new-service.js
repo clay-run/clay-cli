@@ -94,44 +94,36 @@ module.exports = function(serviceName) {
         var status = new Spinner('Creating service configuration file..');
         status.start();
 
-        fs.copyAsync(commandFile, path.resolve(dir, `index.js`))
-        .then(() => {
-            status.message('Writing Clay configuration file..');
-            return fs.writeFileAsync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
-        })
-        .then(() => {
-            status.message('Writing test data file..');
-            return fs.writeFileAsync(testDataPath, JSON.stringify(testDataJson, null, 2));
-        })
-        .then(() => {
-            status.message('Writing npm package file..');
-        return fs.writeFileAsync(packagePath, JSON.stringify(packageJson, null, 2));
-        })
-        .then(() => {
-            status.message('Creating npm_modules..');
-            return fs.mkdirAsync(path.resolve(dir, 'node_modules'));
-        })
-        .then(() => {
-            status.message('Installing modules..');
-            return exec('npm install', {cwd: dir})
-        })
-        .then((result) => {
-            status.message('Deploying your service..');
-            // Set the directory to act on as the new service directory
-            return this.deploy({mode: 'POST', dir: dir})
-        })
-        .then((deployResponse) => {
-            status.stop();
-            var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
-            print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
-        })
-        .catch((err) => {
-            status.stop();
-            if(process.env.CLAY_DEV) console.log(err);
-            if(err && !err.statusCode) print(SERVICE_NOT_CREATED)
-            else if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
-            else if(err.statusCode == 500) print(SERVICE_NOT_CREATED)
-            fs.removeSync(dir);
-        })
-  }.bind(this))
+  fs.copyAsync(commandFile, path.resolve(dir, `index.js`))
+  .then(() => {
+    return fs.writeFileAsync(clayConfigPath, JSON.stringify(clayConfigJson, null, 2));
+  })
+  .then(() => {
+    return fs.writeFileAsync(testDataPath, JSON.stringify(testDataJson, null, 2));
+  })
+  .then(() => {
+   return fs.writeFileAsync(packagePath, JSON.stringify(packageJson, null, 2));
+  })
+  .then(() => {
+    return fs.mkdirAsync(path.resolve(dir, 'node_modules'));
+  })
+  .then(() => {
+    return exec('npm install', {cwd: dir})
+  })
+  .then(() => {
+    // Set the directory to act on as the new service directory
+    return this.deploy({mode: 'POST', dir: dir})
+  })
+  .then(() => {
+    var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
+    print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
+  })
+  .catch((err) => {
+    if(process.env.CLAY_DEV) console.log(err);
+    if(err && !err.statusCode) print(SERVICE_NOT_CREATED)
+    else if(err.statusCode == 409) print(SERVICE_EXISTS_ERR_MSG)
+    else if(err.statusCode == 500) print(SERVICE_NOT_CREATED)
+    fs.removeSync(dir);
+  })
+
 }

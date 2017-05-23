@@ -12,7 +12,6 @@ module.exports = function() {
     validate: function(email) {
       if(email === '') return 'Please enter an email'
         else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
-        else return true
       return true;
     }
   };
@@ -30,7 +29,7 @@ module.exports = function() {
     name: 'confirmPassword',
     message: 'Confirm password',
     validate: function(confirmPassword) {
-      if(password === '') return 'Please confirm password'
+      if(confirmPassword === '') return 'Please confirm password'
         else return true
     }
   };
@@ -41,7 +40,6 @@ module.exports = function() {
     validate: function(username) {
       if(username === '') return 'Please enter a username'
         else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
-        else return true
       return true
     }
   }

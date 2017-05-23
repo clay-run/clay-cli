@@ -3,7 +3,7 @@ const rp       = require('request-promise-native')
   ,   fs       = require('fs-extra')
   ,   inquirer = require('inquirer');
 
-module.exports = function(authorizeApi, clayCredentialsDir) {
+module.exports = function() {
   var email = {
     type: 'input',
     name: 'email',
