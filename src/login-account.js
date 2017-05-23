@@ -24,7 +24,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
   };
 
   inquirer.prompt([email, password])
-  .then((answers) => {
+  .then(function(answers) {
     var requestOptions = {
       uri: this.apis.loginApi,
       method: 'post',
@@ -36,7 +36,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
       json: true
     }
     return rp(requestOptions)
-  })
+  }.bind(this))
   .then((userCredentials) => {
     if(userCredentials.api_token) {
       //TODO: make this into one function with signup once these are all consolidated into one service class

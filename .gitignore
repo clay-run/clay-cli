@@ -1,1 +1,9 @@
+# Node modules
 node_modules
+npm-debug.log
+
+# Yarn install
+yarn.lock
+
+# Deploy a test function 
+test-function
