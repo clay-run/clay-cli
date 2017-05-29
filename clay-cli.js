@@ -30,7 +30,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup', 'logout'];
-var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help']);
+var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help', 'bundle']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -70,6 +70,11 @@ program
 .command('deploy')
 .description('deploys service that is defined in the current directory')
 .action(() => service.deploy({mode: 'PUT', dir: process.cwd()}));
+
+program
+.command('bundle')
+.description('Deploy a project on Clay')
+.action(() => service.deployProject(process.cwd()))
 
 program
 .command('logs')

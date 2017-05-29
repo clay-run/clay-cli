@@ -5,6 +5,7 @@ var   deployService = require('./deploy-service.js')
  ,    runService    = require('./run-service.js')
  ,    openService   = require('./open-service.js')
  ,    forkService   = require('./fork-service.js')
+ ,    deployProject = require('./deploy-project.js')
  ,    addEnvService = require('./add-env-service.js')
  ,    listEnvService = require('./list-env-service.js')
  ,    deleteEnvService = require('./delete-env-service.js')
@@ -31,5 +32,6 @@ Service.prototype.open   = openService;
 Service.prototype.addEnv = addEnvService;
 Service.prototype.listEnv = listEnvService;
 Service.prototype.deleteEnv = deleteEnvService;
+Service.prototype.deployProject = deployProject;
 
 module.exports = Service;
