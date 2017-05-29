@@ -47,17 +47,35 @@ module.exports = function(projectDir) {
     console.log(chalk.green('Found ') + chalk.green.bold(directories.length + ' function'+plural) + chalk.green(' to deploy'));
 
     var service = this;
-    Promise.all(
-        _.map(directories, function(fnDir) {
-            return service.deploy({ mode: 'PUT', dir: path.resolve(projectDir, fnDir) })
-        })
-    ).then(function() {
-        status.stop();
+    var serviceIndex = 0;
+    function doneDeploying(err) {
+        if(err) {
+            console.log('An error occured during deployment');
+            console.log('Please contact support@clay.run');
+            if(process.env.CLAY_DEBUG) {
+                console.log(err);
+            }
+            return;
+        }
         console.log(chalk.black('---------------------------------'));
         console.log(chalk.green('🚀 ' + directories.length + ' functions have been deployed.'))
-    }, function(err) {
-        status.stop();
-        console.log('An error occured during deployment').
-        console.log('Please contact support@clay.run')
-    })
+    }
+
+    function deployNext() {
+        var pathDir = path.resolve(projectDir, directories[serviceIndex]);
+
+        service.deploy({ mode: 'PUT', dir: pathDir }).then(function() {
+            serviceIndex++;
+
+            if(serviceIndex == directories.length) {
+                doneDeploying();
+            } else {
+                deployNext();
+            }
+        }, function(err) {
+            doneDeploying(err);
+        })
+    }
+
+    deployNext();
 }
