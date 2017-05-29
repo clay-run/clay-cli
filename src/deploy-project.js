@@ -58,6 +58,6 @@ module.exports = function(projectDir) {
     }, function(err) {
         status.stop();
         console.log('An error occured during deployment').
-        console.log('Please contact ')
+        console.log('Please contact support@clay.run')
     })
 }
