@@ -25,14 +25,13 @@ module.exports = function(deployConfig) {
 
     var status = new Spinner('Building your service..');
     status.start();
-                  
     var archive = archiver('zip');
 
     // Adding the function directory
     archive.directory(deployConfig.dir || '.', false, { date: new Date() });
 
     // On zipping error
-    archive.on('error', function(err) {    
+    archive.on('error', function(err) {
       if (err) {
         print(SERVICE_UPDATE_FAILED_MSG)
         return
@@ -46,7 +45,7 @@ module.exports = function(deployConfig) {
     });
 
     archive.on('end', function() {
-      var zip_buffer = Buffer.concat(zip_buffers); 
+      var zip_buffer = Buffer.concat(zip_buffers);
 
       var requestOptions = {
         uri: this.apis.methodsApi,

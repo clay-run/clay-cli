@@ -49,11 +49,11 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
       console.log("Wooo! You're now logged in")
     }
     // should never occur
-    else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
+    else console.log("Clay seems to have had a minor issue, please try logging in again.");
   })
   .catch((err) => {
-    if(err.statusCode == 401) console.log("Looks like you entered a wrong email or password. Try again or signup with a new account.")
-    else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
+    if(err.statusCode == 401 || err.statusCode == 400) console.log("Looks like you entered a wrong email or password. Try again or signup with a new account.")
+    else console.log("Clay seems to have had a minor issue, please try logging in again.");
   })
 }
 
