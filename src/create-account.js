@@ -86,7 +86,7 @@ module.exports = function() {
   })
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
-    if(err.statusCode == 400 || err.statusCode == 401) console.log("You must enter a value for email, password, username and the correct beta access code.");
+    if(err.statusCode == 400 || err.statusCode == 401) console.log(err.error.msg);
     else console.log("Clay has run into a minor issue. Please try again and if it presists contact support@clay.run");
   })
 }
