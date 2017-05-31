@@ -52,6 +52,7 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
     else console.log("Clay seems to have had a minor issue, please try logging in again.");
   })
   .catch((err) => {
+    if(process.env.CLAY_DEV) console.log(err)
     if(err.statusCode == 401 || err.statusCode == 400) console.log("Looks like you entered a wrong email or password. Try again or signup with a new account.")
     else console.log("Clay seems to have had a minor issue, please try logging in again.");
   })
