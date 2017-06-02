@@ -15,7 +15,7 @@ module.exports = function(deployConfig) {
 
     const dir                     = deployConfig.dir
     const currentProjectConfig    = require(path.resolve(dir,  'clay-config.json'));
-    const USER_NOT_AUTHORIZED_ERR = chalk.white(`Current user is not authorized to create or update services. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
+    const USER_NOT_AUTHORIZED_ERR = chalk.white(`The current user is not authorized to create or update this service. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
     const SERVICE_URL_MSG         = chalk.white(`🚀 Your service is available here: `)+chalk.green.underline(`${this.apis.servicePage}/${this.credentials.username}/${currentProjectConfig.serviceName}`)
 
     var execOptions = {
@@ -69,7 +69,7 @@ module.exports = function(deployConfig) {
         status.stop();
         var bytes = archive.pointer();
         var mbs = Math.floor(((bytes / 1024) / 1024) * 100) / 100;
-        console.log(('Your service weights ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
+        console.log(('Your service is ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
         if(response.result == true && deployConfig.mode  == 'PUT') {
           var time = new Date();
           if(!deployConfig.suppressProgressMessages) {
@@ -77,14 +77,14 @@ module.exports = function(deployConfig) {
           }
           print(SERVICE_URL_MSG)
         }
-          resolve(response);
+        resolve(response);
       })
       .catch((err) => {
         status.stop();
         if(process.env.CLAY_DEV) console.log(err);
         if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
         else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
-        reject(err);
+        if(deployConfig.mode == 'POST') reject(err);
       })
     }.bind(this))
 
