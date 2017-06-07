@@ -21,6 +21,7 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
     downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
+    createApi: `${clayApi}/services/kareemcore/create-lambda`,
     forkApi: `${clayApi}/services/kareemcore/fork-lambda`,
     servicePage: `${clayApi}/services`
 }
@@ -61,10 +62,9 @@ program
 .description(chalk.white('Clay allows you to instantly build and remix cloud hosted functions'))
 .version('0.4.9')
 .usage('<command>')
-.command('new')
-.option('-t, --template <templateName>', 'Template for service')
-.description('creates a new service with the name [serviceName]. Optionally pass -t to start off with a template. Try -t alexa for a voice template for Amazon Alexa')
-.action((cmd, options) => service.create(cmd, options))
+.command('new [serviceName]')
+.description('creates a new service with the name [serviceName].')
+.action((cmd) => service.create(cmd, account))
 
 program
 .command('deploy')
