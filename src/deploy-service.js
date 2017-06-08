@@ -26,7 +26,7 @@ module.exports = function(deployConfig) {
     var status = new Spinner('Verifying config file');
     status.start();
 
-    this.lintConfig(deployConfig.dir).then(function() {
+    this.lintConfig(deployConfig.dir).then(() => {
         status.message('Building your service..');
         var archive = archiver('zip');
 
