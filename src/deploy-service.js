@@ -27,8 +27,6 @@ module.exports = function(deployConfig) {
     status.start();
 
     this.lintConfig(deployConfig.dir).then(function() {
-    process.exit(1);
-
         status.message('Building your service..');
         var archive = archiver('zip');
 
