@@ -78,7 +78,6 @@ module.exports = function(configDir) {
                 print(chalk.red('- #'+i+' ') + error.message);
                 i++;
             })
-
             print('\n');
 
             reject(errors);

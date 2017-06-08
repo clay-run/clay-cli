@@ -27,6 +27,19 @@ module.exports = function(deployConfig) {
     status.start();
 
     this.lintConfig(deployConfig.dir).then(() => {
+        deployFunction();
+    }, function(errors) {
+        if(deployConfig.options.force) {
+            print('Forcing deployment of function');
+            deployFunction();
+        } else {
+            status.stop();
+            print('Could not deploy function');
+            print('Use ' + chalk.red('--force') + ' or ' + chalk.red('-f') + ' to force deployment');
+        }
+    });
+
+    var deployFunction = () => {
         status.message('Building your service..');
         var archive = archiver('zip');
 
@@ -92,10 +105,7 @@ module.exports = function(deployConfig) {
         }.bind(this))
 
         archive.finalize();
-    }, function(errors) {
-        status.stop();
-        print('Could not deploy function');
-    });
+    }
   })
 }
 
