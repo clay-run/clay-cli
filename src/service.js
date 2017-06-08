@@ -9,6 +9,7 @@ var   deployService = require('./deploy-service.js')
  ,    addEnvService = require('./add-env-service.js')
  ,    listEnvService = require('./list-env-service.js')
  ,    deleteEnvService = require('./delete-env-service.js')
+ ,    lintConfig    = require('./lint-config.js')
  ,    infoService   = require('./get-service-info.js');
 
 function Service(serviceConfig) {
@@ -33,5 +34,6 @@ Service.prototype.addEnv = addEnvService;
 Service.prototype.listEnv = listEnvService;
 Service.prototype.deleteEnv = deleteEnvService;
 Service.prototype.deployProject = deployProject;
+Service.prototype.lintConfig = lintConfig;
 
 module.exports = Service;

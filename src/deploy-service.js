@@ -23,75 +23,90 @@ module.exports = function(deployConfig) {
       cwd: dir
     };
 
-    var status = new Spinner('Building your service..');
+    var status = new Spinner('Verifying config file');
     status.start();
-                  
-    var archive = archiver('zip');
 
-    // Adding the function directory
-    archive.directory(deployConfig.dir || '.', false, { date: new Date() });
-
-    // On zipping error
-    archive.on('error', function(err) {    
-      if (err) {
-        print(SERVICE_UPDATE_FAILED_MSG)
-        return
-      }
-    });
-
-    // Saving buffers to RAM
-    var zip_buffers = [];
-    archive.on('data', function(buffer) {
-        zip_buffers.push(buffer);
-    });
-
-    archive.on('end', function() {
-      var zip_buffer = Buffer.concat(zip_buffers); 
-
-      var requestOptions = {
-        uri: this.apis.methodsApi,
-        method: deployConfig.mode ,
-        body: {
-          commandDescription: currentProjectConfig.serviceDescription,
-          methodDisplayName: currentProjectConfig.serviceDisplayName,
-          commandName: currentProjectConfig.serviceName,
-          function_input: JSON.stringify(currentProjectConfig.inputs),
-          apiToken: this.credentials.token,
-          serviceType: currentProjectConfig.serviceType,
-          fileData: zip_buffer.toString('base64')
-        },
-        timeout: 0,
-        json: true
-      }
-
-      status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
-      rp(requestOptions)
-      .then((response) => {
-        status.stop();
-        var bytes = archive.pointer();
-        var mbs = Math.floor(((bytes / 1024) / 1024) * 100) / 100;
-        console.log(('Your service weights ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
-        if(response.result == true && deployConfig.mode  == 'PUT') {
-          var time = new Date();
-          if(!deployConfig.suppressProgressMessages) {
-            print(SERVICE_UPDATED_MSG, time.toLocaleDateString(), time.toLocaleTimeString())
-          }
-          print(SERVICE_URL_MSG)
+    this.lintConfig(deployConfig.dir, true).then(() => {
+        deployFunction();
+    }, function(errors) {
+        if(deployConfig.options.force) {
+            print('Forcing deployment of function');
+            deployFunction();
+        } else {
+            status.stop();
+            print('Could not deploy function');
+            print('Use ' + chalk.red('--force') + ' or ' + chalk.red('-f') + ' to force deployment');
         }
-          resolve(response);
-      })
-      .catch((err) => {
-        status.stop();
-        if(process.env.CLAY_DEV) console.log(err);
-        if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
-        else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
-        reject(err);
-      })
-    }.bind(this))
+    });
 
-    archive.finalize();
+    var deployFunction = () => {
+        status.message('Building your service..');
+        var archive = archiver('zip');
+
+        // Adding the function directory
+        archive.directory(deployConfig.dir || '.', false, { date: new Date() });
+
+        // On zipping error
+        archive.on('error', function(err) {
+        if (err) {
+            print(SERVICE_UPDATE_FAILED_MSG)
+            return
+        }
+        });
+
+        // Saving buffers to RAM
+        var zip_buffers = [];
+        archive.on('data', function(buffer) {
+            zip_buffers.push(buffer);
+        });
+
+        archive.on('end', function() {
+        var zip_buffer = Buffer.concat(zip_buffers);
+
+        var requestOptions = {
+            uri: this.apis.methodsApi,
+            method: deployConfig.mode ,
+            body: {
+            commandDescription: currentProjectConfig.serviceDescription,
+            methodDisplayName: currentProjectConfig.serviceDisplayName,
+            commandName: currentProjectConfig.serviceName,
+            function_input: JSON.stringify(currentProjectConfig.inputs),
+            apiToken: this.credentials.token,
+            serviceType: currentProjectConfig.serviceType,
+            fileData: zip_buffer.toString('base64')
+            },
+            timeout: 0,
+            json: true
+        }
+
+        status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
+        rp(requestOptions)
+        .then((response) => {
+            status.stop();
+            var bytes = archive.pointer();
+            var mbs = Math.floor(((bytes / 1024) / 1024) * 100) / 100;
+            console.log(('Your service weights ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
+            if(response.result == true && deployConfig.mode  == 'PUT') {
+            var time = new Date();
+            if(!deployConfig.suppressProgressMessages) {
+                print(SERVICE_UPDATED_MSG, time.toLocaleDateString(), time.toLocaleTimeString())
+            }
+            print(SERVICE_URL_MSG)
+            }
+            resolve(response);
+        })
+        .catch((err) => {
+            status.stop();
+            if(process.env.CLAY_DEV) console.log(err);
+            if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
+            else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
+            reject(err);
+        })
+        }.bind(this))
+
+        archive.finalize();
+    }
   })
-
 }
 
 

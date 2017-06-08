@@ -1,6 +1,8 @@
 <img src="http://i.imgur.com/Z0vvLkI.png" width="720px">
 
 ---
+[![Build Status](https://travis-ci.org/clay-run/clay-cli.svg?branch=master)](https://travis-ci.org/clay-run/clay-cli)
+
 **This repo is the command line tool for using Clay - The fastest way to create and deploy microservices.**
 
 You can learn more here: <https://www.clay.run>

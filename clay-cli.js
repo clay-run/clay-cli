@@ -68,8 +68,9 @@ program
 
 program
 .command('deploy')
+.option('-f, --force', 'Force deployment')
 .description('deploys service that is defined in the current directory')
-.action(() => service.deploy({mode: 'PUT', dir: process.cwd()}));
+.action((options) => service.deploy({mode: 'PUT', options: options, dir: process.cwd()}));
 
 program
 .command('bundle')

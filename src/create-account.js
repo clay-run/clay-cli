@@ -11,8 +11,7 @@ module.exports = function() {
     message: 'Enter your email address',
     validate: function(email) {
       if(email === '') return 'Please enter an email'
-        else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
-        else return true
+      else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
       return true;
     }
   };
@@ -22,7 +21,7 @@ module.exports = function() {
     message: 'Enter a password',
     validate: function(password) {
       if(password === '') return 'Please enter a password'
-        else return true
+      else return true
     }
   };
   var confirmPassword = {
@@ -31,7 +30,7 @@ module.exports = function() {
     message: 'Confirm password',
     validate: function(confirmPassword) {
       if(password === '') return 'Please confirm password'
-        else return true
+      else return true
     }
   };
   var username = {
@@ -40,14 +39,22 @@ module.exports = function() {
     message: 'Enter a username',
     validate: function(username) {
       if(username === '') return 'Please enter a username'
-        else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
-        else return true
+      else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
+      return true
+    }
+  }
+  var accesscode = {
+    type: 'input',
+    name: 'accesscode',
+    message: 'Enter the beta access code',
+    validate: function(username) {
+      if(username === '') return 'Please enter the beta access code'
       return true
     }
   }
   // make a call to get a unique token that gets saved and used in future calls
 
-  inquirer.prompt([email, password, confirmPassword, username])
+  inquirer.prompt([email, password, confirmPassword, username, accesscode])
   .then((answers) => {
     if(answers.password !== answers.confirmPassword) {
       console.log(chalk.white("The passwords you entered don't match. Please try signing up again."))
@@ -60,7 +67,8 @@ module.exports = function() {
       body: {
         email: answers.email.toLowerCase(),
         password: answers.password,
-        username: answers.username.toLowerCase()
+        username: answers.username.toLowerCase(),
+        accesscode: answers.accesscode.toLowerCase()
       },
       timeout: 0,
       json: true
@@ -72,11 +80,12 @@ module.exports = function() {
       fs.writeFileSync(path.resolve(this.credentialsDir, 'clayCredentials.json'), JSON.stringify(signupResult, null, 2));
       console.log(chalk.white("Wooo! You're now signed up. Try creating a new service using clay new"))
     }
-    else console.log("Unfortunately Clay hit a brick wall. Contact support@tryclay.com");
+    else console.log("Clay hit a minor error please try again or contact support@clay.run");
   })
   .catch((err) => {
-    if(err.statusCode == 400) console.log("You must enter a value for email, password and username");
-    else console.log("The username or email address is already taken. Try logging in or using a different email address or username");
+    if(process.env.CLAY_DEV) console.log(err);
+    if(err.statusCode == 400 || err.statusCode == 401) console.log(err.error.msg);
+    else console.log("Clay has run into a minor issue. Please try again and if it presists contact support@clay.run");
   })
 }
 
