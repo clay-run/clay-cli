@@ -1,11 +1,12 @@
 var chalk               = require('chalk')
   , print               = console.log
   , path                = require('path')
+  , getClayConfig       = require('./get-clay-config.js')
   , _                   = require('underscore');
 
-module.exports = function(configDir) {
+module.exports = function(configDir, log) {
     return new Promise((resolve, reject) => {
-        const config     = require(path.resolve(configDir,  'clay-config.json'));
+        const config     = getClayConfig(configDir);
         var   errors     = []
             , validTypes = ['db', 'text', 'url', 'date', 'address', 'select', 'image', 'file', 'json', 'autocomplete'];
 
@@ -52,15 +53,13 @@ module.exports = function(configDir) {
                     errors.push({
                         message: 'Input '+chalk.green(name)+' does not have a valid type.'
                     })
-                };
-
-                if(!_.contains(validTypes, input.type)) {
+                } else if(!_.contains(validTypes, input.type)) {
                     errors.push({
                         message: 'Type ' + chalk.green(input.type) + ' is not valid for input ' + chalk.green(name)
                     })
                 }
 
-                if(!input.displayName || input.name.displayName < 2) {
+                if(!input.description || input.description.length < 2) {
                     errors.push({
                         message: 'Input ' + chalk.green(name) + ' does not have a description (at least 1 character)'
                     })
@@ -71,14 +70,16 @@ module.exports = function(configDir) {
         if(errors.length == 0) {
             resolve();
         } else {
-            // Print errors
-            print(chalk.bold('\n⛔️ clay-config.js contains ' + chalk.red(errors.length) + ' error'+ (errors.length > 1 ? 's' : '') +':'));
-            var i = 0;
-            _.each(errors, function(error) {
-                print(chalk.red('- #'+i+' ') + error.message);
-                i++;
-            })
-            print('\n');
+            if(log) {
+                // Print errors
+                print(chalk.bold('\n⛔️ clay-config.js contains ' + chalk.red(errors.length) + ' error'+ (errors.length > 1 ? 's' : '') +':'));
+                var i = 0;
+                _.each(errors, function(error) {
+                    print(chalk.red('- #'+i+' ') + error.message);
+                    i++;
+                })
+                print('\n');
+            }
 
             reject(errors);
         }

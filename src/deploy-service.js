@@ -26,7 +26,7 @@ module.exports = function(deployConfig) {
     var status = new Spinner('Verifying config file');
     status.start();
 
-    this.lintConfig(deployConfig.dir).then(() => {
+    this.lintConfig(deployConfig.dir, true).then(() => {
         deployFunction();
     }, function(errors) {
         if(deployConfig.options.force) {
