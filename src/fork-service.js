@@ -6,6 +6,8 @@ var chalk    = require('chalk')
 
 
 module.exports = function(existingService, forkedService, account) {
+  const     clayDir                      = path.resolve(__dirname, '..')
+    ,       templateMessages             = require(path.resolve(clayDir, 'templates/clay-microservices-node-text.js'));
 
   var newService;
   // format serviceName also handles urls
@@ -40,7 +42,11 @@ module.exports = function(existingService, forkedService, account) {
   rp(forkOptions)
   .then(() => {
     print(chalk.white(`Finished forking the function...please wait while we download it\n`));
-    account.download(`${this.credentials.username}/${newService}`);
+    return account.download(`${this.credentials.username}/${newService}`);
+  })
+  .then((dir) => {
+    var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
+    print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
   })
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
