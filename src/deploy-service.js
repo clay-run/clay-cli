@@ -60,7 +60,7 @@ module.exports = function(deployConfig) {
             zip_buffers.push(buffer);
         });
 
-        archive.on('end', function() {
+        archive.on('end', () => {
         var zip_buffer = Buffer.concat(zip_buffers);
 
         var requestOptions = {
@@ -100,10 +100,8 @@ module.exports = function(deployConfig) {
             if(process.env.CLAY_DEV) console.log(err);
             if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
             else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
-            reject(err);
+          })
         })
-        }.bind(this))
-
         archive.finalize();
     }
   })

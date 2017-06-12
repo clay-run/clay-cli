@@ -6,9 +6,11 @@ var chalk    = require('chalk')
  ,  rp       = require('request-promise-native');
 
 
-module.exports = function(serviceName) {
+module.exports = function(serviceName, options) {
   return new Promise((resolve, reject) => {
     // format serviceName
+    options = options || {suppressMsg: false};
+
     serviceName = serviceName.split('/').slice(-2).join('-');
 
     const dir = path.resolve(process.cwd(), `${serviceName}`)
@@ -18,7 +20,7 @@ module.exports = function(serviceName) {
       process.exit();
     }
 
-    print(chalk.white(`Starting download of Clay service:\n`));
+    if(!options.suppressMsg) print(chalk.white(`Starting download of Clay service:\n`));
 
     var getFunctionOptions = {
       uri: this.apis.downloadApi,
@@ -55,13 +57,12 @@ module.exports = function(serviceName) {
         fs.writeFileSync(`${dir}.zip`, downloadedCode)
         var zipFolder = new zip(`${dir}.zip`)
         zipFolder.extractAllTo(`${dir}`)
-        print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
+        if(!options.suppressMsg) print(chalk.white(`Successfully downloaded the Clay service to this directory `)+chalk.red(`${dir}`));
         fs.removeSync(`${dir}.zip`)
         resolve(dir);
       })
       .catch((err) => {
         if(process.env.CLAY_DEV) console.log(err);
-        reject(err);
         process.exit();
       })
   })

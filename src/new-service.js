@@ -84,7 +84,7 @@ module.exports = function(serviceName, account) {
     rp(getFunctionOptions)
     .then((deployResponse) => {
       status.stop();
-      return account.download(`${this.credentials.username}/${serviceName}`)
+      return account.download(`${this.credentials.username}/${serviceName}`, {suppressMsg: true})
     })
     .then((dir) => {
       var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
