@@ -31,7 +31,7 @@ if(!fs.existsSync(clayCredentialsDir)) fs.mkdirSync(clayCredentialsDir)
 
 // get credentials if not login or signup command
 var authCommands = ['login', 'signup', 'logout'];
-var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help']);
+var globalCommands = authCommands.concat(['new', 'list', ,'--help', '--version', 'open', 'run', 'download', 'fork', 'whoami', 'help', '-V']);
 
 if(!authCommands.find((command) => command == process.argv[2])) {
   var clayCredentials = getCredentials(clayCredentialsDir);
@@ -69,22 +69,22 @@ program
 program
 .command('deploy')
 .option('-f, --force', 'Force deployment')
-.description('deploys service that is defined in the current directory')
+.description('deploys the service that is defined in the current directory')
 .action((options) => service.deploy({mode: 'PUT', options: options, dir: process.cwd()}));
 
 program
 .command('logs')
-.description('Get production logs for your service')
+.description('gets production logs for the service')
 .action(() => service.logs());
 
 program
 .command('test')
-.description('test your service by running it locally')
+.description('tests the service by running it locally')
 .action(() => service.test());
 
 program
 .command('run [serviceName] [data]')
-.description('run your service in production if run from within your service directory. Optionally you can run any Clay service. Pass the full name of the service which looks like this username/servicename')
+.description('runs the service defined in the current directory in production by default. To run another service, pass the full name of the service which is of the form username/servicename')
 .action((serviceName, data) => service.run(serviceName, data));
 
 program
@@ -94,12 +94,12 @@ program
 
 program
 .command('info')
-.description('get a description of your service')
+.description('get a description of the service')
 .action(() => service.info());
 
 program
 .command('add:env [key] [value]')
-.description('add an environment variable for api keys, secrets, and any static code that you should not be in your code')
+.description('add an environment variable for api keys, secrets, and any string that should be private and not in revealed in the code')
 .action((key, value) => service.addEnv(key, value));
 
 program
@@ -119,7 +119,7 @@ program
 
 program
 .command('download <serviceName>')
-.description('download the code for a service that you own or that is public. <serviceName> can be the name of the service e.g. nicoslepicos/whois or a url to that service on clay.')
+.description('download the code for a service that the current user owns or that is public. <serviceName> can be the name of the service e.g. nicoslepicos/whois or a url to that service.')
 .action((serviceName) => account.download(serviceName));
 
 program
@@ -129,7 +129,7 @@ program
 
 program
 .command('whoami')
-.description('find out the account that you are logged in as')
+.description('find out the username of the currently logged in account')
 .action(() => account.whoami());
 
 program
