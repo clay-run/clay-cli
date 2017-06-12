@@ -156,7 +156,7 @@ To deploy simply run while in the service directory:
 $ clay deploy
 ```
 
-###Clay Config File
+### Clay Config File
 The config file looks like this:
 
 ```
