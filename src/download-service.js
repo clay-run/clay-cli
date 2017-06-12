@@ -33,7 +33,6 @@ module.exports = function(serviceName) {
 
     rp(getFunctionOptions)
       .then((response) => {
-        console.log(response);
         if(response.statusCode == 401) {
           print(chalk.white(`Make sure you entered the name of the service or the url to the service. E.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
           print(chalk.white(`Also, make sure that this service exists and is owned by you or it is a public service`))

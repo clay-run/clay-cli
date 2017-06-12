@@ -11,8 +11,7 @@ module.exports = function() {
     message: 'Enter your email address',
     validate: function(email) {
       if(email === '') return 'Please enter an email'
-        else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
-        else return true
+      else if(email.match(/.*@.+/) == null) return 'Please enter a valid email'
       return true;
     }
   };
@@ -22,7 +21,7 @@ module.exports = function() {
     message: 'Enter a password',
     validate: function(password) {
       if(password === '') return 'Please enter a password'
-        else return true
+      else return true
     }
   };
   var confirmPassword = {
@@ -31,7 +30,7 @@ module.exports = function() {
     message: 'Confirm password',
     validate: function(confirmPassword) {
       if(password === '') return 'Please confirm password'
-        else return true
+      else return true
     }
   };
   var username = {
@@ -40,8 +39,7 @@ module.exports = function() {
     message: 'Enter a username',
     validate: function(username) {
       if(username === '') return 'Please enter a username'
-        else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
-        else return true
+      else if(username.match(/[^a-zA-Z0-9_]/)) return 'Please only use letters, numbers or _ in your username'
       return true
     }
   }
@@ -51,7 +49,7 @@ module.exports = function() {
     message: 'Enter the beta access code',
     validate: function(username) {
       if(username === '') return 'Please enter the beta access code'
-      else return true
+      return true
     }
   }
   // make a call to get a unique token that gets saved and used in future calls
