@@ -1,14 +1,15 @@
-var path                      = require('path')
- ,  exec                      = require('child_process').exec
- ,  chalk                     = require('chalk')
- ,  rp                        = require('request-promise-native')
- ,  print                     = console.log
- ,  archiver                  = require('archiver')
- ,  UPDATING_SERVICE_MSG      = chalk.white(`Updating Service...\n`)
- ,  SERVICE_UPDATED_MSG       = chalk.green(`✅ Service Updated.`)
- ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`)
- ,  clui                      = require('clui')
- ,  Spinner                   = clui.Spinner;
+var path                       = require('path')
+  ,  fs                        = require('fs-extra')
+  ,  exec                      = require('child_process').exec
+  ,  chalk                     = require('chalk')
+  ,  rp                        = require('request-promise-native')
+  ,  print                     = console.log
+  ,  AdmZip                    = require('adm-zip')
+  ,  UPDATING_SERVICE_MSG      = chalk.white(`Updating Service...\n`)
+  ,  SERVICE_UPDATED_MSG       = chalk.green(`✅ Service Updated.`)
+  ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`)
+  ,  clui                      = require('clui')
+  ,  Spinner                   = clui.Spinner;
 
 module.exports = function(deployConfig) {
   return new Promise((resolve, reject) =>  {
@@ -26,84 +27,67 @@ module.exports = function(deployConfig) {
     var status = new Spinner('Verifying config file');
     status.start();
 
-    this.lintConfig(deployConfig.dir, true).then(() => {
-        deployFunction();
-    }, function(errors) {
-        if(deployConfig.options.force) {
-            print('Forcing deployment of function');
-            deployFunction();
-        } else {
-            status.stop();
-            print('Could not deploy function');
-            print('Use ' + chalk.red('--force') + ' or ' + chalk.red('-f') + ' to force deployment');
+
+    status.message('Building your service..');
+    var zip = new AdmZip();
+
+    // get list of all file names other than node_modules
+    var dirFiles = fs.readdirSync(dir)
+    var idxOfNodeModules = dirFiles.indexOf('node_modules');
+    dirFiles.splice(idxOfNodeModules, 1);
+
+    dirFiles.forEach((file) => {
+      zip.addLocalFile(file)
+    })
+
+    var zipPromise = new Promise((resolve, reject) => {
+      zip.toBuffer((buffer, err) => {
+        if(err) reject(err)
+        resolve(buffer)
+      })
+
+    })
+
+    this.lintConfig(deployConfig.dir, true)
+    .then(() => {
+      return zipPromise
+    })
+    .then((zipBuffer) => {
+      status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
+      var requestOptions = {
+        uri: this.apis.methodsApi,
+        method: deployConfig.mode ,
+        body: {
+          commandDescription: currentProjectConfig.serviceDescription,
+          methodDisplayName: currentProjectConfig.serviceDisplayName,
+          commandName: currentProjectConfig.serviceName,
+          function_input: JSON.stringify(currentProjectConfig.inputs),
+          apiToken: this.credentials.token,
+          serviceType: currentProjectConfig.serviceType,
+          fileData: zipBuffer.toString('base64')
+        },
+        timeout: 0,
+        json: true
+      }
+      return rp(requestOptions)
+    })
+    .then((response) => {
+      status.stop();
+      if(response.result == true && deployConfig.mode  == 'PUT') {
+        var time = new Date();
+        if(!deployConfig.suppressProgressMessages) {
+          print(SERVICE_UPDATED_MSG, time.toLocaleDateString(), time.toLocaleTimeString())
         }
-    });
-
-    var deployFunction = () => {
-        status.message('Building your service..');
-        var archive = archiver('zip');
-
-        // Adding the function directory
-        archive.directory(deployConfig.dir || '.', false, { date: new Date() });
-
-        // On zipping error
-        archive.on('error', function(err) {
-        if (err) {
-            print(SERVICE_UPDATE_FAILED_MSG)
-            return
-        }
-        });
-
-        // Saving buffers to RAM
-        var zip_buffers = [];
-        archive.on('data', function(buffer) {
-            zip_buffers.push(buffer);
-        });
-
-        archive.on('end', () => {
-        var zip_buffer = Buffer.concat(zip_buffers);
-
-        var requestOptions = {
-            uri: this.apis.methodsApi,
-            method: deployConfig.mode ,
-            body: {
-            commandDescription: currentProjectConfig.serviceDescription,
-            methodDisplayName: currentProjectConfig.serviceDisplayName,
-            commandName: currentProjectConfig.serviceName,
-            function_input: JSON.stringify(currentProjectConfig.inputs),
-            apiToken: this.credentials.token,
-            serviceType: currentProjectConfig.serviceType,
-            fileData: zip_buffer.toString('base64')
-            },
-            timeout: 0,
-            json: true
-        }
-
-        status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
-        rp(requestOptions)
-        .then((response) => {
-            status.stop();
-            var bytes = archive.pointer();
-            var mbs = Math.floor(((bytes / 1024) / 1024) * 100) / 100;
-            console.log(('Size of service is ' + archive.pointer() + ' bytes (' + mbs + ' MBs).'));
-            if(response.result == true && deployConfig.mode  == 'PUT') {
-            var time = new Date();
-            if(!deployConfig.suppressProgressMessages) {
-                print(SERVICE_UPDATED_MSG, time.toLocaleDateString(), time.toLocaleTimeString())
-            }
-            print(SERVICE_URL_MSG)
-            }
-            resolve(response);
-        })
-        .catch((err) => {
-            status.stop();
-            if(process.env.CLAY_DEV) console.log(err);
-            if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
-            else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
-          })
-        })
-        archive.finalize();
-    }
+        print(SERVICE_URL_MSG)
+      }
+      resolve(response);
+    })
+    .catch((err) => {
+      status.stop();
+      if(process.env.CLAY_DEV) console.log(err);
+      if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
+      else if(deployConfig.mode == 'PUT') print(SERVICE_UPDATE_FAILED_MSG)
+    })
   })
 }
 

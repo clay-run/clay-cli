@@ -1,8 +1,7 @@
 var chalk               = require('chalk')
   , print               = console.log
   , path                = require('path')
-  , getClayConfig       = require('./get-clay-config.js')
-  , _                   = require('underscore');
+  , getClayConfig       = require('./get-clay-config.js');
 
 module.exports = function(configDir, log) {
     return new Promise((resolve, reject) => {
@@ -32,7 +31,7 @@ module.exports = function(configDir, log) {
             var index = 0;
             var namesTaken = {};
 
-            _.each(config.inputs, function(input) {
+            config.inputs.forEach((input) => {
                 index++;
 
                 if(!input.name || input.name.length < 2) {
@@ -53,7 +52,7 @@ module.exports = function(configDir, log) {
                     errors.push({
                         message: 'Input '+chalk.green(name)+' does not have a valid type.'
                     })
-                } else if(!_.contains(validTypes, input.type)) {
+                } else if(validTypes.indexOf(input.type) == -1) {
                     errors.push({
                         message: 'Type ' + chalk.green(input.type) + ' is not valid for input ' + chalk.green(name)
                     })
@@ -64,7 +63,7 @@ module.exports = function(configDir, log) {
                         message: 'Input ' + chalk.green(name) + ' does not have a description (at least 1 character)'
                     })
                 }
-            });      
+            });
         }
 
         if(errors.length == 0) {
@@ -74,7 +73,7 @@ module.exports = function(configDir, log) {
                 // Print errors
                 print(chalk.bold('\n⛔️ clay-config.js contains ' + chalk.red(errors.length) + ' error'+ (errors.length > 1 ? 's' : '') +':'));
                 var i = 0;
-                _.each(errors, function(error) {
+                errors.forEach((error) => {
                     print(chalk.red('- #'+i+' ') + error.message);
                     i++;
                 })
