@@ -21,6 +21,7 @@ const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
     downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
+    deployApi: `${clayApi}/services/kareemcore/deploy-lambda`,
     createApi: `${clayApi}/services/kareemcore/create-lambda`,
     forkApi: `${clayApi}/services/kareemcore/fork-lambda`,
     servicePage: `${clayApi}/services`
@@ -71,6 +72,11 @@ program
 .option('-f, --force', 'Force deployment')
 .description('deploys the service that is defined in the current directory')
 .action((options) => service.deploy({mode: 'PUT', options: options, dir: process.cwd()}));
+
+program
+.command('dp')
+.description('deploys the service that is defined in the current directory')
+.action((options) => service.dp({dir: process.cwd()}));
 
 program
 .command('bundle')
