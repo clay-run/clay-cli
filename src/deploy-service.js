@@ -31,14 +31,8 @@ module.exports = function(deployConfig) {
     status.message('Building your service..');
     var zip = new AdmZip();
 
-    // get list of all file names other than node_modules
-    var dirFiles = fs.readdirSync(dir)
-    var idxOfNodeModules = dirFiles.indexOf('node_modules');
-    dirFiles.splice(idxOfNodeModules, 1);
 
-    dirFiles.forEach((file) => {
-      zip.addLocalFile(file)
-    })
+    zip.addLocalFolder(deployConfig.dir)
 
     var zipPromise = new Promise((resolve, reject) => {
       zip.toBuffer((buffer, err) => {
