@@ -5,10 +5,11 @@ var path                       = require('path')
   ,  rp                        = require('request-promise-native')
   ,  print                     = console.log
   ,  AdmZip                    = require('adm-zip')
+  ,  clui                      = require('clui')
+  ,  sha                       = require('crypto-js/sha256')
   ,  UPDATING_SERVICE_MSG      = chalk.white(`Updating Service...\n`)
   ,  SERVICE_UPDATED_MSG       = chalk.green(`✅ Service Updated.`)
   ,  SERVICE_UPDATE_FAILED_MSG = chalk.white(`Service failed to update. Please contact support@clay.run`)
-  ,  clui                      = require('clui')
   ,  Spinner                   = clui.Spinner;
 
 module.exports = function(deployConfig) {
@@ -18,6 +19,7 @@ module.exports = function(deployConfig) {
     const currentProjectConfig    = require(path.resolve(dir,  'clay-config.json'));
     const USER_NOT_AUTHORIZED_ERR = chalk.white(`The current user is not authorized to create or update this service. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
     const SERVICE_URL_MSG         = chalk.white(`🚀 Your service is available here: `)+chalk.green.underline(`${this.apis.servicePage}/${this.credentials.username}/${currentProjectConfig.serviceName}`)
+    const packageJson             = require((path.resolve(dir, 'package.json')));
 
     var execOptions = {
       maxBuffer: 1024 * 50000,
@@ -64,6 +66,7 @@ module.exports = function(deployConfig) {
           serviceInputs:      JSON.stringify(currentProjectConfig.inputs),
           apiToken:           this.credentials.token,
           serviceType:        currentProjectConfig.serviceType,
+          packageHash:        sha(JSON.stringify(packageJson.dependencies)).toString(),
           serviceData:        zipBuffer.toString('base64')
         },
         timeout: 0,

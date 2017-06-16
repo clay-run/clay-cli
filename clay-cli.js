@@ -14,16 +14,17 @@ var   program           = require('commander')
 const NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively.")
  ,    NOT_CLAY_DIR_ERR   = chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again");
 
-const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay.run'
+const clayApi  = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay.run'
+const clayExec = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://exec.clay.run'
  ,  apis    = {
     signupApi:`${clayApi}/api/v1/auth/signup`,
     loginApi: `${clayApi}/api/v1/auth/login`,
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
-    downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
-    deployApi: `${clayApi}/services/kareemcore/deploy-lambda`,
-    createApi: `${clayApi}/services/kareemcore/create-lambda`,
-    forkApi: `${clayApi}/services/kareemcore/fork-lambda`,
+    downloadApi: `${clayExec}/kareemcore/download-lambda`,
+    deployApi: `${clayExec}/kareemcore/deploy-lambda`,
+    createApi: `${clayExec}/kareemcore/create-lambda`,
+    forkApi: `${clayExec}/kareemcore/fork-lambda`,
     servicePage: `${clayApi}/services`
 }
 
