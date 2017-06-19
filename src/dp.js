@@ -1,6 +1,5 @@
 var path                       = require('path')
   ,  fs                        = require('fs-extra')
-  ,  exec                      = require('child_process').exec
   ,  chalk                     = require('chalk')
   ,  rp                        = require('request-promise-native')
   ,  print                     = console.log
@@ -16,15 +15,11 @@ module.exports = function(deployConfig) {
   return new Promise((resolve, reject) =>  {
 
     const dir                     = deployConfig.dir
-    const currentProjectConfig    = require(path.resolve(dir,  'clay-config.json'));
-    const USER_NOT_AUTHORIZED_ERR = chalk.white(`The current user is not authorized to create or update this service. You are signed as: `)+chalk.red(`${this.credentials.username}\n`)
-    const SERVICE_URL_MSG         = chalk.white(`🚀 Your service is available here: `)+chalk.green.underline(`${this.apis.servicePage}/${this.credentials.username}/${currentProjectConfig.serviceName}`)
+    const clayConfig              = require(path.resolve(dir,  'clay-config.json'));
     const packageJson             = require((path.resolve(dir, 'package.json')));
-
-    var execOptions = {
-      maxBuffer: 1024 * 50000,
-      cwd: dir
-    };
+    const packageHash             = sha(JSON.stringify(packageJson.dependencies)).toString();
+    const USER_NOT_AUTHORIZED_ERR = chalk.white(`The current user is not authorized to create or update this service. You are signed as: `)+chalk.red(`${this.credentials.username}\n`);
+    const SERVICE_URL_MSG         = chalk.white(`🚀 Your service is available here: `)+chalk.green.underline(`${this.apis.servicePage}/${this.credentials.username}/${clayConfig.serviceName}`);
 
     var status = new Spinner('Verifying config file');
     status.start();
@@ -55,18 +50,19 @@ module.exports = function(deployConfig) {
       return zipPromise
     })
     .then((zipBuffer) => {
-      status.message('Deploying ' + currentProjectConfig.serviceDisplayName + ' on Clay Cloud..');
+      status.message('Deploying ' + clayConfig.serviceDisplayName + ' on Clay Cloud..');
+      console.log(clayConfig);
       var requestOptions = {
         uri: this.apis.deployApi,
         method: 'POST',
         body: {
-          serviceDescription: currentProjectConfig.serviceDescription,
-          serviceDisplayName: currentProjectConfig.serviceDisplayName,
-          serviceName:        `${currentProjectConfig.username}-${currentProjectConfig.serviceName}`,
-          serviceInputs:      JSON.stringify(currentProjectConfig.inputs),
+          serviceDescription: clayConfig.serviceDescription,
+          serviceDisplayName: clayConfig.serviceDisplayName,
+          serviceName:        `${clayConfig.username}-${clayConfig.serviceName}`,
+          serviceInputs:      JSON.stringify(clayConfig.inputs),
           apiToken:           this.credentials.token,
-          serviceType:        currentProjectConfig.serviceType,
-          packageHash:        sha(JSON.stringify(packageJson.dependencies)).toString(),
+          serviceType:        clayConfig.serviceType,
+          packageHash:        packageHash,
           serviceData:        zipBuffer.toString('base64')
         },
         timeout: 0,
