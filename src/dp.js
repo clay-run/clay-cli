@@ -63,6 +63,7 @@ module.exports = function(deployConfig) {
           apiToken:           this.credentials.token,
           serviceType:        clayConfig.serviceType,
           packageHash:        packageHash,
+          forceDeploy:        (deployConfig.options.force) ? true : false,
           serviceData:        zipBuffer.toString('base64')
         },
         timeout: 0,
