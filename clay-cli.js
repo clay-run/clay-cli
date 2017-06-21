@@ -152,6 +152,13 @@ program
 .description('show this help')
 .action(() => program.outputHelp());
 
+program
+.command('*')
+.action(() => {
+  console.log("Sorry, that's not a valid Clay command. Try one of these commands:\n");
+  program.outputHelp();
+})
+
 program.parse(process.argv);
 
 
