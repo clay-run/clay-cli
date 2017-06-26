@@ -33,8 +33,13 @@ module.exports = function(deployConfig) {
     var idxOfNodeModules = dirFiles.indexOf('node_modules');
     dirFiles.splice(idxOfNodeModules, 1);
 
+    dirFiles
     dirFiles.forEach((file) => {
-      zip.addLocalFile(file)
+      if(fs.lstatSync(path.join(dir, file)).isDirectory()) {
+        zip.addLocalFolder(path.resolve(dir, file), file)
+      } else {
+        zip.addLocalFile(file)
+      }
     })
 
     var zipPromise = new Promise((resolve, reject) => {
@@ -51,7 +56,6 @@ module.exports = function(deployConfig) {
     })
     .then((zipBuffer) => {
       status.message('Deploying ' + clayConfig.serviceDisplayName + ' on Clay Cloud..');
-      console.log(clayConfig);
       var requestOptions = {
         uri: this.apis.deployApi,
         method: 'POST',
