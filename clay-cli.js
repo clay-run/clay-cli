@@ -20,6 +20,7 @@ const clayExec = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://exe
     signupApi:`${clayApi}/api/v1/auth/signup`,
     loginApi: `${clayApi}/api/v1/auth/login`,
     methodsApi: `${clayApi}/api/v1/services/public/methods`,
+    privateVarApi: `${clayApi}/api/v1/services/methods`,
     logsApi: `${clayApi}/api/v1/services/logs`,
     downloadApi: `${clayExec}/kareemcore/download-lambda`,
     deployApi: `${clayExec}/kareemcore/deploy-lambda`,
