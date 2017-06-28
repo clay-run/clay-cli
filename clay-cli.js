@@ -114,17 +114,17 @@ program
 program
 .command('add:env [key] [value]')
 .description('add an environment variable for api keys, secrets, and any string that should be private and not in revealed in the code')
-.action((key, value) => service.addEnv(key, value));
+.action((key, value) => service.manageEnv('add', key, value));
 
 program
 .command('delete:env')
 .description('delete an environment variable')
-.action((key) => service.deleteEnv(key));
+.action((key) => service.manageEnv('delete', key));
 
 program
 .command('list:env')
 .description('list environment variables that are set up for this service')
-.action(() => service.listEnv());
+.action(() => service.manageEnv('list'));
 
 program
 .command('fork <existingService> [newService]')

@@ -28,7 +28,7 @@ module.exports = function(deployConfig) {
     status.message('Building your service..');
     var zip = new AdmZip();
 
-    // get list of all file names other than node_modules
+   // get list of all file names other than node_modules
     var dirFiles = fs.readdirSync(dir)
     var idxOfNodeModules = dirFiles.indexOf('node_modules');
     dirFiles.splice(idxOfNodeModules, 1);

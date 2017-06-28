@@ -77,6 +77,7 @@ module.exports = function(deployConfig) {
       resolve(response);
     })
     .catch((err) => {
+      console.log(err);
       status.stop();
       if(process.env.CLAY_DEV) console.log(err);
       if(err.statusCode == 401) print(USER_NOT_AUTHORIZED_ERR)
