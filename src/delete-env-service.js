@@ -19,8 +19,9 @@ module.exports = function(key) {
 
 
   var username = currentProjectConfig.username || this.credentials.username
+  var serviceName = `${username}-${currentProjectConfig.serviceName}`
   var listOptions = {
-    uri: this.apis.methodsApi+`/${username}-${currentProjectConfig.serviceName}`,
+    uri: this.apis.privateVarApi+`/${serviceName}`,
     method: 'GET',
     qs: {
       apiToken: this.credentials.token
@@ -34,10 +35,10 @@ module.exports = function(key) {
     var envVars = response.envVars || {};
     delete envVars[key]
     var requestOptions = {
-      uri: this.apis.methodsApi,
-      method: 'PUT',
+      uri: this.apis.deployApi,
+      method: 'POST',
       body: {
-        commandName: currentProjectConfig.serviceName,
+        serviceName: serviceName,
         envVars: envVars,
         apiToken: this.credentials.token
       },

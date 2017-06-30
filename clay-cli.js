@@ -14,16 +14,19 @@ var   program           = require('commander')
 const NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. Type ")+chalk.red("clay signup")+chalk.white(" or ")+chalk.red("clay login")+chalk.white(" respectively.")
  ,    NOT_CLAY_DIR_ERR   = chalk.white("This command can only be run from within a clay service directory. Create a new service or go to an existing service folder and run the command again");
 
-const clayApi = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay.run'
+const clayApi  = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay.run'
+const clayExec = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://exec.clay.run'
  ,  apis    = {
-    signupApi:`${clayApi}/api/v1/auth/signup`,
-    loginApi: `${clayApi}/api/v1/auth/login`,
-    methodsApi: `${clayApi}/api/v1/services/public/methods`,
-    logsApi: `${clayApi}/api/v1/services/logs`,
-    downloadApi: `${clayApi}/services/kareemcore/download-lambda`,
-    createApi: `${clayApi}/services/kareemcore/create-lambda`,
-    forkApi: `${clayApi}/services/kareemcore/fork-lambda`,
-    servicePage: `${clayApi}/services`
+    signupApi:     `${clayApi}/api/v1/auth/signup`,
+    loginApi:      `${clayApi}/api/v1/auth/login`,
+    methodsApi:    `${clayApi}/api/v1/services/public/methods`,
+    privateVarApi: `${clayApi}/api/v1/services/methods`,
+    logsApi:       `${clayApi}/api/v1/services/logs`,
+    downloadApi:   `${clayExec}/kareemcore/download-lambda`,
+    deployApi:     `${clayExec}/kareemcore/deploy-lambda`,
+    createApi:     `${clayExec}/kareemcore/create-lambda`,
+    forkApi:       `${clayExec}/kareemcore/fork-lambda`,
+    servicePage:   `${clayApi}/services`
 }
 
 var clayCredentialsDir = path.resolve(os.homedir(), '.clay');
@@ -70,7 +73,7 @@ program
 .command('deploy')
 .option('-f, --force', 'Force deployment')
 .description('deploys the service that is defined in the current directory')
-.action((options) => service.deploy({mode: 'PUT', options: options, dir: process.cwd()}));
+.action((options) => service.dp({options: options, dir: process.cwd()}));
 
 program
 .command('bundle')
@@ -105,17 +108,17 @@ program
 program
 .command('add:env [key] [value]')
 .description('add an environment variable for api keys, secrets, and any string that should be private and not in revealed in the code')
-.action((key, value) => service.addEnv(key, value));
+.action((key, value) => service.manageEnv('add', key, value));
 
 program
 .command('delete:env')
 .description('delete an environment variable')
-.action((key) => service.deleteEnv(key));
+.action((key) => service.manageEnv('delete', key));
 
 program
 .command('list:env')
 .description('list environment variables that are set up for this service')
-.action(() => service.listEnv());
+.action(() => service.manageEnv('list'));
 
 program
 .command('fork <existingService> [newService]')
