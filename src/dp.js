@@ -63,7 +63,7 @@ module.exports = function(deployConfig) {
           serviceDescription: clayConfig.serviceDescription,
           serviceDisplayName: clayConfig.serviceDisplayName,
           serviceName:        `${clayConfig.username}-${clayConfig.serviceName}`,
-          serviceInputs:      JSON.stringify(clayConfig.inputs),
+          serviceInputs:      clayConfig.inputs,
           apiToken:           this.credentials.token,
           serviceType:        clayConfig.serviceType,
           packageHash:        packageHash,
