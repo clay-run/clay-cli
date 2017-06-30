@@ -6,7 +6,6 @@ var   deployService = require('./deploy-service.js')
  ,    openService   = require('./open-service.js')
  ,    forkService   = require('./fork-service.js')
  ,    deployProject = require('./deploy-project.js')
- ,    dp            = require('./dp.js')
  ,    manageEnvService = require('./manage-env-service.js')
  ,    lintConfig    = require('./lint-config.js')
  ,    infoService   = require('./get-service-info.js');
