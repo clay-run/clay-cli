@@ -73,7 +73,7 @@ program
 .command('deploy')
 .option('-f, --force', 'Force deployment')
 .description('deploys the service that is defined in the current directory')
-.action((options) => service.dp({options: options, dir: process.cwd()}));
+.action((options) => service.deploy({options: options, dir: process.cwd()}));
 
 program
 .command('bundle')
