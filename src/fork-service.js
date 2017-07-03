@@ -2,6 +2,8 @@ var chalk    = require('chalk')
  ,  print    = console.log
  ,  fs       = require('fs-extra')
  ,  path     = require('path')
+ ,  clui     = require('clui')
+ ,  Spinner  = clui.Spinner
  ,  rp       = require('request-promise-native');
 
 
@@ -25,7 +27,8 @@ module.exports = function(existingService, forkedService, account) {
     process.exit();
   }
 
-  print(chalk.white(`Starting fork of `)+chalk.red(`${existingService}`)+chalk.white(` (this may take a moment please wait):\n`));
+  var status = new Spinner(`Starting fork of ${existingService}`);
+  status.start()
 
   var forkOptions = {
     uri: this.apis.forkApi,
@@ -41,14 +44,16 @@ module.exports = function(existingService, forkedService, account) {
 
   rp(forkOptions)
   .then(() => {
-    print(chalk.white(`Finished forking the function...please wait while we download it\n`));
+    status.stop()
     return account.download(`${this.credentials.username}/${newService}`);
   })
   .then((dir) => {
+    status.stop()
     var urlForService = `${this.apis.servicePage}/${this.credentials.username}/${serviceName}`
     print(templateMessages.serviceCreated(urlForService, dir, DOCS_LINK+'/tutorial'));
   })
   .catch((err) => {
+    status.stop()
     if(process.env.CLAY_DEV) console.log(err);
     process.exit();
   })
