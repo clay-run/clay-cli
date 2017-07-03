@@ -22,7 +22,6 @@ function Service(serviceConfig) {
 
 Service.prototype.create = newService;
 Service.prototype.deploy = deployService;
-Service.prototype.dp     = dp;
 Service.prototype.logs   = logService;
 Service.prototype.info   = infoService;
 Service.prototype.test   = testService;
