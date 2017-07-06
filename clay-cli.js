@@ -77,7 +77,7 @@ program
 
 program
 .command('bundle')
-.description('Deploy a project on Clay')
+.description('deploys a set of functions by running deploy on each sub-directory in the current directory')
 .action(() => service.deployProject(process.cwd()))
 
 program
