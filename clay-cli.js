@@ -25,7 +25,7 @@ const clayExec = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://exe
     downloadApi:   `${clayExec}/kareemcore/download-lambda`,
     deployApi:     `${clayExec}/kareemcore/deploy-lambda`,
     createApi:     `${clayExec}/kareemcore/create-lambda`,
-    forkApi:       `${clayExec}/kareemcore/fork-lambda`,
+    forkApi:       `${clayExec}/kareemcore/fork`,
     servicePage:   `${clayApi}/services`
 }
 

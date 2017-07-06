@@ -35,8 +35,8 @@ module.exports = function(existingService, forkedService, account) {
     method: 'POST',
     body: {
       apiToken: this.credentials.token,
-      methodName: existingService,
-      forkName: newService
+      serviceName: existingService,
+      newServiceName: newService
     },
     timeout: 0,
     json: true
