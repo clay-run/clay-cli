@@ -10,12 +10,12 @@ module.exports = function(serviceName, jsonData) {
   var dataMsg;
 
   if(serviceName != null) {
-    urlForService = `${this.apis.servicePage}/${serviceName}`;
+    urlForService = `${this.apis.clayExec}/${this.credentials.username}/${serviceName}`;
     data = (jsonData) ? JSON.parse(jsonData) : null;
     dataMsg = chalk.white(`Passing the following JSON data as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`);
   } else if (this.clayConfig != null && this.clayConfig.serviceName != null) {
     var usernameForService = (this.clayConfig.username) ? this.clayConfig.username : this.credentials.username;
-    urlForService = `${this.apis.servicePage}/${usernameForService}/${this.clayConfig.serviceName}`
+    urlForService = `${this.apis.clayExec}/${usernameForService}/${this.clayConfig.serviceName}`
     data  = require(path.resolve(process.cwd(), 'test-data.json'))
     dataMsg = chalk.white(`Using JSON data from test-data.json as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`);
   } else {
@@ -41,6 +41,6 @@ module.exports = function(serviceName, jsonData) {
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
     if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
-    else if(err.statusCode >= 500) console.log("An error occurred please contact support@clay.run")
+    console.log(chalk.white(`Error Code: ${err.statusCode} with message: ${err.message}`))
   })
 }

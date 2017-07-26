@@ -17,6 +17,7 @@ const NO_CREDENTIALS_ERR = chalk.white("You must sign up or login to use Clay. T
 const clayApi  = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://clay.run'
 const clayExec = (process.env.CLAY_DEV) ? 'http://127.0.0.1:4500' : 'https://exec.clay.run'
  ,  apis    = {
+    clayExec: clayExec,
     signupApi:     `${clayApi}/api/v1/auth/signup`,
     loginApi:      `${clayApi}/api/v1/auth/login`,
     methodsApi:    `${clayApi}/api/v1/services/public/methods`,
