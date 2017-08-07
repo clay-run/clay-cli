@@ -31,7 +31,9 @@ module.exports = function(deployConfig) {
    // get list of all file names other than node_modules
     var dirFiles = fs.readdirSync(dir)
     var idxOfNodeModules = dirFiles.indexOf('node_modules');
+    var idxOfClayConfig= dirFiles.indexOf('clay-config.json');
     dirFiles.splice(idxOfNodeModules, 1);
+    dirFiles.splice(idxOfClayConfig, 1);
 
     dirFiles
     dirFiles.forEach((file) => {
