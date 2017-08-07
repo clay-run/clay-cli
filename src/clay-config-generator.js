@@ -1,9 +1,9 @@
 module.exports = {
-  defaultTemplate: (serviceName, serviceType, serviceInputs, username) => {
+  defaultTemplate: (serviceName, serviceType, serviceInputs, serviceDescription, username) => {
     return {
       serviceName: `${serviceName}`,
       username: `${username}`,
-      serviceDescription: 'A service that takes in bits and moves atoms',
+      serviceDescription: `${serviceDescription}`,
       inputs: serviceInputs,
       serviceDisplayName: `${serviceName}`,
       serviceType: `${serviceType}`

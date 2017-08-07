@@ -69,7 +69,7 @@ module.exports = function(serviceName, options) {
         fs.writeFileSync(`${dir}.zip`, downloadedCode)
         var zipFolder = new zip(`${dir}.zip`)
         zipFolder.extractAllTo(`${dir}`)
-        var clayConfig = clayConfigGenerator.defaultTemplate(service.name.split('-').slice(1).join('-'), service.type, service.function_input, service.name.split('-').shift())
+        var clayConfig = clayConfigGenerator.defaultTemplate(service.name.split('-').slice(1).join('-'), service.type, service.function_input, service.description, service.name.split('-').shift())
         fs.writeFileSync(`${dir}/clay-config.json`, JSON.stringify(clayConfig, null, 2))
         if(!options.suppressMsg) print((`✅ Successfully downloaded the Clay service to this directory `)+chalk.green(`${dir}`));
         if(status) { status.stop() }
