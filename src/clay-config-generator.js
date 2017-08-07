@@ -1,18 +1,11 @@
 module.exports = {
-  defaultTemplate: (serviceName, serviceType, username) => {
+  defaultTemplate: (serviceName, serviceType, serviceInputs, username) => {
     return {
       accountName: `public`,
       serviceName: `${serviceName}`,
       username: `${username}`,
       serviceDescription: 'A service that takes in bits and moves atoms',
-      inputs: [
-        {
-          "name": "myVariable",
-          "type": "text",
-          "displayName": "Human Readable Variable",
-          "description": "Description of variable"
-        }
-      ],
+      inputs: serviceInputs,
       serviceDisplayName: `${serviceName}`,
       serviceType: `${serviceType}`
     };

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 var chalk    = require('chalk')
  ,  print    = console.log
  ,  fs       = require('fs-extra')
@@ -5,6 +6,7 @@ var chalk    = require('chalk')
  ,  zip      = require('adm-zip')
  ,  clui     = require('clui')
  ,  Spinner  = clui.Spinner
+ ,  clayConfigGenerator = require('./clay-config-generator.js')
  ,  rp       = require('request-promise-native');
 
 
@@ -32,7 +34,7 @@ module.exports = function(serviceName, options) {
       method: 'POST',
       body: {
         apiToken: this.credentials.token,
-        functionName: serviceName
+        serviceName: serviceName
       },
       timeout: 0,
       json: true
@@ -56,20 +58,20 @@ module.exports = function(serviceName, options) {
             status.message('Downloading service..')
         }
         var downloadOptions = {
-          uri: response.service.Code.Location,
+          uri: response.serviceUrl,
           method: 'GET',
           timeout: 0,
           encoding: null,
           json: true
         }
-        return rp(downloadOptions)
+        return Promise.all([rp(downloadOptions), Promise.resolve(response.service)])
       })
-      .then((downloadedCode) => {
-        if(status) { status.stop() }
-
+      .then(([downloadedCode, service]) => {
         fs.writeFileSync(`${dir}.zip`, downloadedCode)
         var zipFolder = new zip(`${dir}.zip`)
         zipFolder.extractAllTo(`${dir}`)
+        var clayConfig = clayConfigGenerator.defaultTemplate(service.name, service.type, service.function_input, service.name.split('-').shift())
+        fs.writeFileSync(`${dir}/clay-config.json`, JSON.stringify(clayConfig, null, 2))
         if(!options.suppressMsg) print((`✅ Successfully downloaded the Clay service to this directory `)+chalk.green(`${dir}`));
         fs.removeSync(`${dir}.zip`)
         resolve(dir);
