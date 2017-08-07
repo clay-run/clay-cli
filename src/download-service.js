@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 var chalk    = require('chalk')
  ,  print    = console.log
  ,  fs       = require('fs-extra')
@@ -73,6 +72,7 @@ module.exports = function(serviceName, options) {
         var clayConfig = clayConfigGenerator.defaultTemplate(service.name, service.type, service.function_input, service.name.split('-').shift())
         fs.writeFileSync(`${dir}/clay-config.json`, JSON.stringify(clayConfig, null, 2))
         if(!options.suppressMsg) print((`✅ Successfully downloaded the Clay service to this directory `)+chalk.green(`${dir}`));
+        if(status) { status.stop() }
         fs.removeSync(`${dir}.zip`)
         resolve(dir);
       })
