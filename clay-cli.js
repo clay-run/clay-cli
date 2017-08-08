@@ -64,7 +64,7 @@ var account = new Account({
 
 program
 .description(chalk.white('Clay allows you to instantly build and remix cloud hosted functions'))
-.version('0.5.0')
+.version('0.5.2')
 .usage('<command>')
 .command('new [serviceName]')
 .description('creates a new service with the name [serviceName].')
