@@ -7,7 +7,7 @@ module.exports = function(configDir, log) {
     return new Promise((resolve, reject) => {
         const config     = getClayConfig(configDir);
         var   errors     = []
-            , validTypes = ['db', 'text', 'url', 'date', 'address', 'select', 'image', 'file', 'json', 'autocomplete'];
+            , validTypes = ['db', 'boolean', 'singleSelect', 'multipleSelect', 'text', 'url', 'date', 'address', 'select', 'image', 'file', 'json', 'autocomplete'];
 
         if(!config.serviceName || config.serviceName.length < 3) {
             errors.push({
