@@ -39,7 +39,6 @@ module.exports = function(authorizeApi, clayCredentialsDir) {
   }.bind(this))
   .then((userCredentials) => {
     if(userCredentials.api_token) {
-      //TODO: make this into one function with signup once these are all consolidated into one service class
       var credentials = {
         username: userCredentials.username,
         email: userCredentials.email,
