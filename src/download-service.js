@@ -67,8 +67,9 @@ module.exports = function(serviceName, options) {
       .catch((err) => {
         if(status) { status.stop() }
         if(err.statusCode == 401) {
-          print(chalk.white(`\nUnauthorized or not found: \n\n1. Make sure you entered the name of the service or the url to the service. \nE.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
+          print(chalk.white(`\nService not found or user unauthorized: \n\n1. Make sure you entered the name of the service or the url to the service. \nE.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
           print(chalk.white(`\n2. Also, make sure that this service exists and is owned by you or it is a public service`))
+          print(chalk.white(`You are currently signed in as: `)+chalk.red(`${this.credentials.username}\n`));
           process.exit();
         }
         else if(err.statusCode == 500) {
