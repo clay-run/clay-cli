@@ -23,7 +23,7 @@ const clayExec = 'https://exec.clay.run'
     methodsApi:    `${clayApi}/api/v1/services/public/methods`,
     privateVarApi: `${clayApi}/api/v1/services/methods`,
     logsApi:       `${clayApi}/api/v1/services/logs`,
-    downloadApi:   `${clayExec}/kareemcore/download-lambda`,
+    downloadApi:   `${clayExec}/api/download`,
     deployApi:     `${clayExec}/kareemcore/deploy-lambda`,
     createApi:     `${clayExec}/kareemcore/create-lambda`,
     forkApi:       `${clayExec}/kareemcore/fork`,

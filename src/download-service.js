@@ -41,18 +41,6 @@ module.exports = function(serviceName, options) {
 
     rp(getFunctionOptions)
       .then((response) => {
-        if(status && response.statusCode != 200) { status.stop(); }
-
-        if(response.statusCode == 401) {
-          print(chalk.white(`Make sure you entered the name of the service or the url to the service. E.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
-          print(chalk.white(`Also, make sure that this service exists and is owned by you or it is a public service`))
-          process.exit();
-        }
-        else if(response.statusCode == 500) {
-          print(chalk.white(`Error has occurred please contact support@clay.run`));
-          process.exit();
-        }
-
         if(status) {
             status.message('Downloading service..')
         }
@@ -78,6 +66,15 @@ module.exports = function(serviceName, options) {
       })
       .catch((err) => {
         if(status) { status.stop() }
+        if(err.statusCode == 401) {
+          print(chalk.white(`\nUnauthorized or not found: \n\n1. Make sure you entered the name of the service or the url to the service. \nE.g. `)+chalk.red(`clay download nicoslepicos/whois`)+chalk.white(` or `)+chalk.red(`clay download http://clay.run/services/nicoslepicos/whois`))
+          print(chalk.white(`\n2. Also, make sure that this service exists and is owned by you or it is a public service`))
+          process.exit();
+        }
+        else if(err.statusCode == 500) {
+          print(chalk.white(`Error has occurred please contact support@clay.run`));
+          process.exit();
+        }
         if(process.env.CLAY_DEV) console.log(err);
         process.exit();
       })

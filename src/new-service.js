@@ -1,13 +1,13 @@
 var   path                 = require('path')
-  ,    chalk                = require('chalk')
-  ,    print                = console.log
-  ,    exec                 = require('child-process-promise').exec
-  ,    fs                   = require('fs-extra-promise')
-  ,    inquirer             = require('inquirer')
-  ,    rp                   = require('request-promise-native')
-  ,    clayDir              = path.resolve(__dirname, '..')
-  ,    templateMessages     = require(path.resolve(clayDir, 'templates/clay-microservices-node-text.js'))
-  ,    clui                 = require('clui');
+  ,   chalk                = require('chalk')
+  ,   print                = console.log
+  ,   exec                 = require('child-process-promise').exec
+  ,   fs                   = require('fs-extra-promise')
+  ,   inquirer             = require('inquirer')
+  ,   rp                   = require('request-promise-native')
+  ,   clayDir              = path.resolve(__dirname, '..')
+  ,   templateMessages     = require(path.resolve(clayDir, 'templates/clay-microservices-node-text.js'))
+  ,   clui                 = require('clui');
 
 
 module.exports = function(serviceName, account) {
