@@ -43,15 +43,6 @@ module.exports = function() {
       return true
     }
   }
-  var accesscode = {
-    type: 'input',
-    name: 'accesscode',
-    message: 'Enter the beta access code',
-    validate: function(username) {
-      if(username === '') return 'Please enter the beta access code'
-      return true
-    }
-  }
   // make a call to get a unique token that gets saved and used in future calls
 
   inquirer.prompt([email, password, confirmPassword, username, accesscode])
@@ -67,8 +58,7 @@ module.exports = function() {
       body: {
         email: answers.email.toLowerCase(),
         password: answers.password,
-        username: answers.username.toLowerCase(),
-        accesscode: answers.accesscode.toLowerCase()
+        username: answers.username.toLowerCase()
       },
       timeout: 0,
       json: true

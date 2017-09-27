@@ -40,7 +40,8 @@ module.exports = function(serviceName, jsonData) {
   })
   .catch((err) => {
     if(process.env.CLAY_DEV) console.log(err);
-    if(err.statusCode == 401) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
-    console.log(chalk.white(`Error Code: ${err.statusCode} with message: ${err.message}`))
+    if(err.statusCode == 401 && !err.error.userGeneratedError) console.log(chalk.white(`Not authorized to access: `)+chalk.red(`${this.clayConfig.serviceName}\n`))
+    else if(err.statusCode == 520) console.log(chalk.white(`Clay could not complete running  your code because of an error: \n Stack trace ${JSON.stringify(err.error, null, 2)} `))
+    else console.log(`Error Code: ${err.statusCode} - ${err.error.message} \n Error Object: ${JSON.stringify(err.error, null, 2)} `)
   })
 }
