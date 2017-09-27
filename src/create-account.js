@@ -45,7 +45,7 @@ module.exports = function() {
   }
   // make a call to get a unique token that gets saved and used in future calls
 
-  inquirer.prompt([email, password, confirmPassword, username, accesscode])
+  inquirer.prompt([email, password, confirmPassword, username])
   .then((answers) => {
     if(answers.password !== answers.confirmPassword) {
       console.log(chalk.white("The passwords you entered don't match. Please try signing up again."))
