@@ -10,7 +10,7 @@ module.exports = function(serviceName, jsonData) {
   var dataMsg;
 
   if(serviceName != null) {
-    urlForService = `${this.apis.clayExec}/${this.credentials.username}/${serviceName}`;
+    urlForService = `${this.apis.clayExec}/${serviceName}`;
     data = (jsonData) ? JSON.parse(jsonData) : null;
     dataMsg = chalk.white(`Passing the following JSON data as the BODY:\n`)+chalk.red(`${JSON.stringify(data, null, 2)}\n`);
   } else if (this.clayConfig != null && this.clayConfig.serviceName != null) {
