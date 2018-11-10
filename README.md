@@ -300,9 +300,11 @@ $ clay info
 $ clay login
 ```
 
-## Create an Alexa Skill
+## Create an Alexa Skill 
+[This option has been deprecated.](https://github.com/clay-run/clay-cli/issues/8)  
 For a complete walk through check out [this blog
 post](https://medium.com/@nicolaerusan/code-your-first-alexa-skill-in-30-ish-seconds-using-clay-ready-go-8293ee1761ac)
+
 
 
 ```
