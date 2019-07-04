@@ -22,7 +22,8 @@
     "open": "0.0.5",
     "request": "2.76.0",
     "request-promise-native": "1.0.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "snyk": "^1.189.0"
   },
   "engines": {
     "node": ">=4.0"
@@ -40,6 +41,9 @@
   },
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha --recursive --require babel-register",
-    "start": "node clay-cli.js"
-  }
+    "start": "node clay-cli.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
